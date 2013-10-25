@@ -9,10 +9,11 @@ import re
 import string
 import sys
 
-from twitter import *
+from twitter import * # https://github.com/sixohsix/twitter
 from wordnik import *
 
-import timing
+try: import timing # Optional, http://stackoverflow.com/a/1557906/724176
+except: None
 
 # Twitter: create an app at https://dev.twitter.com/apps/new
 CONSUMER_KEY = "TODO_ENTER_YOURS_HERE"
@@ -29,8 +30,15 @@ WORDNIK_TOKEN = None
 INI_FILE = "/TODO/full/path/to/newfavouritewords.ini"
 CSV_FILE = "/TODO/full/path/to/newfavouritewords.csv"
 
-# Test mode doesn't actually save csv, ini or update Wordnik
+# Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
+
+# Remove duplicates from a list but keep in order
+# http://stackoverflow.com/questions/480214/
+def dedupe(seq):
+    seen = set()
+    seen_add = seen.add
+    return [ x for x in seq if x not in seen and not seen_add(x)]
 
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
@@ -167,11 +175,21 @@ def get_words_from_twitter(search_term, since_id=0):
             word = match.group(1).lower()
             # Strip (balanced) enclosing quotes:
             if (word.startswith('"') and word.endswith('"')) or \
-               (word.startswith("'") and word.endswith("'")):
+               (word.startswith("'") and word.endswith("'")) or  \
+               (word.startswith(u"\u201C") and word.endswith(u"\u201D")) or  \
+               (word.startswith(u"\u201C") and word.endswith(u"\u201C")) or  \
+               (word.startswith(u"\u201D") and word.endswith(u"\u201D")) or  \
+               (word.startswith(u"\u2018") and word.endswith(u"\u2019")): # single curly
                 word = word[1:-1]
+
+            # Strip trailing ellipsis
+            if word.endswith(u"\u2026"):
+                word = word[:-1]
+
             # But ignore sole end quotes, it's probably the last word of a phrase, e.g. "Terra Flops"
             if word.endswith('"') or word.endswith("'"):
                 continue
+
             # Strip hashtag hashes:
             if word.startswith('#'):
                 word = word[1:]
@@ -190,24 +208,65 @@ def get_words_from_twitter(search_term, since_id=0):
     update_csv(search_term, words, statuses)
     return max_id, words
 
+def tweet_those(words, thingy, t):
+    if len(words) < 1: # validation
+        return
+
+    # Remove duplicates
+    words = dedupe(words)
+
+    tweet = thingy.replace("is my ", "Twitter's ")
+    if len(words) == 1: # get the plural right
+        tweet += ": "
+    else:
+        tweet += "s: "
+    new_tweet = tweet
+
+    words_remaining = list(words)
+    for i, word in enumerate(words):
+        if i == 0:
+            new_tweet = tweet + word
+        else:
+            new_tweet = tweet + ", " + word
+        if len(tweet) + len(word) > 140:
+            break
+        tweet = new_tweet
+        words_remaining.pop(0)
+
+    if len(tweet) + 1 <= 140: # Finish properly, if there's room
+        tweet += "."
+
+    print "TWEET THIS:", tweet
+
+    if not TEST_MODE:
+        try:
+            t.statuses.update(status=tweet)
+        except:
+            pass
+
+    if len(words_remaining) > 0:
+        tweet_those(words_remaining, thingy, t)
+
+
 if __name__ == '__main__':
     t = Twitter(auth=OAuth(OAUTH_TOKEN, OAUTH_SECRET,
                            CONSUMER_KEY, CONSUMER_SECRET))
     wordnik_client = swagger.ApiClient(WORDNIK_API_KEY, 'http://api.wordnik.com/v4')
 
     wordListApi = WordListApi.WordListApi(wordnik_client)
+    favourite_max_id, favorite_max_id, fave_max_id = 0,0,0 # initialise (for testing)
     favourite_max_id, favorite_max_id, fave_max_id = load_ini()
-    # favourite_max_id, favorite_max_id, fave_max_id = 0,0,0 # testing
 
     stuff = [
-        ["is my new favourite word", "is my new favorite word", "is my new fave word"], # search term
-        [favourite_max_id, favorite_max_id, fave_max_id],
-        ["twitter-favourites", "twitter-favorites", "twitter-faves", ] # Wordnik word list permalink
+        ["is my new fave word", "is my new favorite word", "is my new favourite word"], # search term
+        [fave_max_id, favorite_max_id, favourite_max_id],
+        ["twitter-faves", "twitter-favorites", "twitter-favourites", ] # Wordnik word list permalink
         ]
 
     for i,search_term in enumerate(stuff[0]):
         stuff[1][i], words = get_words_from_twitter(search_term, stuff[1][i])
         add_to_wordnik(words, stuff[2][i])
-        save_ini(stuff[1][0], stuff[1][1], stuff[1][2])
+        tweet_those(words, stuff[0][i], t)
+        save_ini(stuff[1][2], stuff[1][1], stuff[1][0])
 
 # End of file
