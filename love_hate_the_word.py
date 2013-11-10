@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Find examples of "X is my new favourite/favorite/fave" on Twitter and add them to Wordnik word lists.
+Find examples of "I love/hate the word X" on Twitter and add them to Wordnik word lists.
 """
 import word_tools
 
@@ -13,18 +13,18 @@ CONSUMER_SECRET = "TODO_ENTER_YOURS_HERE"
 OAUTH_TOKEN = "TODO_ENTER_YOURS_HERE"
 OAUTH_SECRET = "TODO_ENTER_YOURS_HERE"
 
-INI_FILE = "/Users/hugo/Dropbox/bin/data/newfavouritewords.ini"
-CSV_FILE = "/Users/hugo/Dropbox/bin/data/newfavouritewords.csv"
+INI_FILE = "/Users/hugo/Dropbox/bin/data/lovehatetheword.ini"
+CSV_FILE = "/Users/hugo/Dropbox/bin/data/lovehatetheword.csv"
 
-favourite_max_id, favorite_max_id, fave_max_id = 0,0,0
+love_max_id, hate_max_id = 0,0
 STUFF = [
-    ["is my new fave word", "is my new favorite word", "is my new favourite word"], # search term
-    [fave_max_id, favorite_max_id, favourite_max_id],
-    ["twitter-faves", "twitter-favorites", "twitter-favourites", ] # Wordnik word list permalink
+    ["I love the word", "I hate the word"], # search term
+    [love_max_id, hate_max_id],
+    ["twitter-loves", "twitter-hates"] # Wordnik word list permalink
     ]
 
-# e.g. "I love the word X" (True) or "X is my favourite new word" (False)?
-TARGET_WORD_FOLLOWS_SEARCH_TERM = False
+# "I love the word X" or "X is my favourite new word"?
+TARGET_WORD_FOLLOWS_SEARCH_TERM = True
 
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
@@ -35,13 +35,15 @@ if __name__ == '__main__':
     STUFF = word_tools.load_ini(INI_FILE, STUFF) # updates STUFF[1]
 
     for i,search_term in enumerate(STUFF[0]):
+#         STUFF[1][i], words = get_words_from_twitter(search_term, STUFF[1][i])
+
         STUFF[1][i], results = word_tools.get_words_from_twitter(search_term, STUFF[1][i])
         words = word_tools.find_words(search_term, TARGET_WORD_FOLLOWS_SEARCH_TERM, results, CSV_FILE)
 
         if not TEST_MODE:
             word_tools.add_to_wordnik(words, STUFF[2][i])
 
-        tweet_prefix = STUFF[0][i].replace("is my ", "Twitter's ")
+        tweet_prefix = STUFF[0][i].replace("I ", "Tweeters ")
         if not TEST_MODE:
             word_tools.tweet_those(words, tweet_prefix)
         word_tools.save_ini(INI_FILE, STUFF)

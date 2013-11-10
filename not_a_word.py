@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Find examples of "X is my new favourite/favorite/fave" on Twitter and add them to Wordnik word lists.
+Find examples of "X is not/isn't/ain't a word" on Twitter and add them to Wordnik word lists.
 """
 import word_tools
 
@@ -13,17 +13,17 @@ CONSUMER_SECRET = "TODO_ENTER_YOURS_HERE"
 OAUTH_TOKEN = "TODO_ENTER_YOURS_HERE"
 OAUTH_SECRET = "TODO_ENTER_YOURS_HERE"
 
-INI_FILE = "/Users/hugo/Dropbox/bin/data/newfavouritewords.ini"
-CSV_FILE = "/Users/hugo/Dropbox/bin/data/newfavouritewords.csv"
+INI_FILE = "/Users/hugo/Dropbox/bin/data/notwords.ini"
+CSV_FILE = "/Users/hugo/Dropbox/bin/data/notwords.csv"
 
-favourite_max_id, favorite_max_id, fave_max_id = 0,0,0
+isnot_max_id, isnt_max_id, aint_max_id = 0,0,0
 STUFF = [
-    ["is my new fave word", "is my new favorite word", "is my new favourite word"], # search term
-    [fave_max_id, favorite_max_id, favourite_max_id],
-    ["twitter-faves", "twitter-favorites", "twitter-favourites", ] # Wordnik word list permalink
+    ["ain't a word", "isn't a word", "is not a word"], # search term
+    [aint_max_id, isnt_max_id, isnot_max_id],
+    ["twitter-aints", "twitter-isnts", "twitter-isnots", ] # Wordnik word list permalink
     ]
 
-# e.g. "I love the word X" (True) or "X is my favourite new word" (False)?
+# "I love the word X" or "X is my favourite new word"?
 TARGET_WORD_FOLLOWS_SEARCH_TERM = False
 
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
@@ -41,9 +41,9 @@ if __name__ == '__main__':
         if not TEST_MODE:
             word_tools.add_to_wordnik(words, STUFF[2][i])
 
-        tweet_prefix = STUFF[0][i].replace("is my ", "Twitter's ")
-        if not TEST_MODE:
-            word_tools.tweet_those(words, tweet_prefix)
+#         tweet_prefix = STUFF[0][i].replace("I ", "Tweeters ")
+#         if not TEST_MODE:
+#             word_tools.tweet_those(words, tweet_prefix)
         word_tools.save_ini(INI_FILE, STUFF)
 
 # End of file

@@ -1,13 +1,13 @@
-CSV_FILE=/TODO/full/path/to/newfavouritewords.csv
+CSV_FILE=~/Dropbox/bin/data/newfavouritewords.csv
 
 DEDUPE=/tmp/newfavouritewords.csv
 rm $DEDUPE
 awk '!a[$0]++' $CSV_FILE > $DEDUPE
 
 rm /tmp/new_fa*.tmp
-grep ",is my new favourite word," $DEDUPE > /tmp/new_favourite_words.tmp
-grep ",is my new favorite word,"  $DEDUPE > /tmp/new_favorite_words.tmp
-grep ",is my new fave word,"      $DEDUPE > /tmp/new_fave_words.tmp
+grep -i ",is my new favourite word," $DEDUPE > /tmp/new_favourite_words.tmp
+grep -i ",is my new favorite word,"  $DEDUPE > /tmp/new_favorite_words.tmp
+grep -i ",is my new fave word,"      $DEDUPE > /tmp/new_fave_words.tmp
 
 # Slice out first column containing just the fav[o[u]ri]te word
 rm /tmp/new_fa*.lst
@@ -29,8 +29,7 @@ rm /tmp/new_fa*.png
 for f in favourite favorite fave favourite_favorite_and_fave
 do
     echo "Create word cloud for 'is my new $f word'"
-    python /TODO/full/path/to/word_cloud/wordcloud.py --stopwords None --width 1024 --height 576 --fontfile "/Library/Fonts/Times New Roman.ttf" "/tmp/new_${f}_words.lst" -o "/tmp/new_${f}_words.png"
-
+    python ~/Dropbox/bin/word_cloud/wordcloud.py --stopwords None --width 1024 --height 576 --fontfile "/Library/Fonts/Times New Roman.ttf" "/tmp/new_${f}_words.lst" -o "/tmp/new_${f}_words.png"
 done
 
 echo "Done."
