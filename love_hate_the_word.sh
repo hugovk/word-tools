@@ -14,15 +14,15 @@ cat /tmp/loved_words.tmp | cut -d, -f1 > /tmp/loved_words.lst
 cat /tmp/hated_words.tmp | cut -d, -f1 > /tmp/hated_words.lst
 # cat $DEDUPE              | cut -d, -f1 > /tmp/loved_and_hated_words.lst
 
-# Find top 10s
+# Find top 20s
 for f in loved hated # loved_and_hated
 do
-    most_frequent_words.py "/tmp/${f}_words.lst"
+    most_frequent_words.py -n 20 "/tmp/${f}_words.lst"
 done
 
 # Make word clouds (uses https://github.com/hugovk/word_cloud)
 
-rm /tmp/new_fa*.png
+rm /tmp/*ed_words.png
 for f in loved hated # loved_and_hated
 do
     echo "Create word cloud of $f words"
