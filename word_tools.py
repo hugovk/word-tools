@@ -5,10 +5,12 @@ Wordnik and Twitter utility functions
 
 ################## GENERAL ##################
 
+import argparse
 import ConfigParser
 import csv
 import re
 import os
+import time
 
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
@@ -23,6 +25,15 @@ def dedupe(seq):
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
     print text.encode('utf-8')
+
+def do_argparse():
+    parser = argparse.ArgumentParser(description='Find examples of "I love/hate the word X" on Twitter and add them to Wordnik word lists.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    TWEET_CHOICES=('none', 'latest', 'latest_onetweet', '24hours', '7days', '30days', 'alltime', 'random')
+    parser.add_argument('-t', '--tweet', default='latest', choices=TWEET_CHOICES,
+        help="How to tweet the results.")
+    args = parser.parse_args()
+    return args
 
 # The `stuff` list looks like:
 #     [
@@ -136,14 +147,69 @@ def find_words(search_term, target_word_follows_search_term, results, csv_file):
     update_csv(csv_file, search_term, words, statuses)
     return words
 
+def find_colnum(heading, row):
+    """Find the coloumn number for a given heading"""
+    # Find word column
+    found_colnum = None
+    for colnum, col in enumerate(row):
+        if heading == col:
+            found_colnum = colnum
+            break
+    return found_colnum
+
+def load_words_from_csv(csv_file, search_term, seconds_delta = None):
+    """Load the CSV and return the top words for a given time period"""
+    cutoff = 0
+    if seconds_delta:
+        epoch_time = int(time.time())
+        cutoff = epoch_time - seconds_delta
+
+    word_colnum, searchterm_colnum, created_at_colnum = None, None, None
+    matched_words = []
+    ifile  = open(csv_file, "rb")
+    reader = csv.reader(ifile)
+
+    for rownum, row in enumerate(reader):
+        # Save header row
+        if rownum == 0:
+            header = row
+
+            # Find columns
+            word_colnum = find_colnum("word", row)
+            searchterm_colnum = find_colnum("search_term", row)
+            created_at_colnum = find_colnum("created_at", row)
+            text_colnum = find_colnum("text", row)
+
+        else: # not header
+            # Kill the spambot!
+            if row[searchterm_colnum] != search_term:
+                continue
+            text = row[text_colnum]
+            if text[0] == "@" and "I love the word douchebag. http://t.co/" in text:
+#                 print row[text_colnum]
+                continue
+
+            # seconds since epoch:
+            timestamp = time.mktime(time.strptime(row[created_at_colnum],'%a %b %d %H:%M:%S +0000 %Y'))
+            if timestamp > cutoff:
+                matched_words.append(row[word_colnum])
+
+    ifile.close()
+
+    import most_frequent_words
+    # Max tweet length is 140
+    # Let's naively set an upper limit of 140/3: one-character word, comma and space
+    top_words = most_frequent_words.most_frequent_words(matched_words, 140/3)
+    return top_words
+
 ################## WORDNIK ##################
 
 from wordnik import *
 
 # Wordnik: get API key at http://developer.wordnik.com/
-WORDNIK_API_KEY = "TODO_ENTER_YOURS_HERE"
-WORDNIK_USERNAME = "TODO_ENTER_YOURS_HERE"
-WORDNIK_PASSWORD = "TODO_ENTER_YOURS_HERE"
+WORDNIK_API_KEY = "3fd3445662c1ac873962d06094f057f39d4711730e1adc28f"
+WORDNIK_USERNAME = "hugovk"
+WORDNIK_PASSWORD = "mytopsecretwordnikpassword"
 WORDNIK_TOKEN = None
 
 wordnik_client = swagger.ApiClient(WORDNIK_API_KEY, 'http://api.wordnik.com/v4')
@@ -224,18 +290,60 @@ def get_words_from_twitter(search_term, since_id=0):
 
     return max_id, results
 
-def tweet_those(words, tweet_prefix):
-    if len(words) < 1: # validation
+def tweet_string(string):
+    if len(string) <= 0:
         return
+    if len(string) + 1 <= 140: # Finish properly, if there's room
+        string += "."
 
+    print "TWEET THIS:", string
+
+    if not TEST_MODE:
+        try:
+            t.statuses.update(status=string)
+        except Exception, e:
+            print str(e)
+
+def tweet_those(words, tweet_prefix, csv_file = None, search_term = None, mode = "latest"):
     # Remove duplicates
     words = dedupe(words)
 
+    shuffle, tweet_all_words = False, False
+    extra_prefix = ""
+    if mode == "none" or TEST_MODE:
+        return
+    elif mode == "latest":
+        tweet_all_words = True
+    elif mode == "latest_onetweet":
+        shuffle = True
+    elif mode == "24hours":
+        words = load_words_from_csv(csv_file, search_term, 24 * 60 * 60 * 60)
+        extra_prefix += " (24 hours)"
+    elif mode == "7days":
+        words = load_words_from_csv(csv_file, search_term, 7 * 24 * 60 * 60 * 60)
+        extra_prefix += " (7 days)"
+    elif mode == "30days":
+        words = load_words_from_csv(csv_file, search_term, 30 * 24 * 60 * 60 * 60)
+        extra_prefix += " (30 days)"
+    elif mode == "alltime":
+        words = load_words_from_csv(csv_file, search_term, None)
+        extra_prefix += " (2013's top words!)"
+    else:
+        print "Unknown mode:", mode
+        return
+
+    if len(words) < 1: # validation
+        return
+
+    if shuffle:
+        from random import shuffle
+        shuffle(words)
+
     tweet = tweet_prefix
     if len(words) == 1: # get the plural right
-        tweet += ": "
+        tweet += extra_prefix + ": "
     else:
-        tweet += "s: "
+        tweet += "s" + extra_prefix + ": "
     new_tweet = tweet
 
     words_remaining = list(words)
@@ -243,24 +351,17 @@ def tweet_those(words, tweet_prefix):
         if i == 0:
             new_tweet = tweet + word
         else:
-            new_tweet = tweet + ", " + word
-        if len(tweet) + len(word) > 140:
+#             new_tweet = tweet + ", " + word
+            new_tweet = tweet + " " + word
+        if len(new_tweet) > 140:
             break
-        tweet = new_tweet
+        else:
+            tweet = new_tweet
         words_remaining.pop(0)
 
-    if len(tweet) + 1 <= 140: # Finish properly, if there's room
-        tweet += "."
+    tweet_string(tweet)
 
-    print "TWEET THIS:", tweet
-
-    if not TEST_MODE:
-        try:
-            t.statuses.update(status=tweet)
-        except:
-            pass
-
-    if len(words_remaining) > 0:
+    if tweet_all_words and len(words_remaining) > 0:
         tweet_those(words_remaining, tweet_prefix)
 
 # End of file
