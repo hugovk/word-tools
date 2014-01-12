@@ -4,6 +4,10 @@ DEDUPE=/tmp/lovehatetheword.csv
 rm $DEDUPE
 awk '!a[$0]++' $CSV_FILE > $DEDUPE
 
+# Remove douchebag spambot
+grep -v ",@.* I love the word douchebag. http://t.co/" $DEDUPE > /tmp/tmp.csv
+mv /tmp/tmp.csv $DEDUPE
+
 rm /tmp/*ed_words.tmp
 grep -i ",I love the word," $DEDUPE > /tmp/loved_words.tmp
 grep -i ",I hate the word," $DEDUPE > /tmp/hated_words.tmp

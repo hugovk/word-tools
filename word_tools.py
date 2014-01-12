@@ -26,14 +26,13 @@ def dedupe(seq):
 def print_it(text):
     print text.encode('utf-8')
 
-def do_argparse():
-    parser = argparse.ArgumentParser(description='Find examples of "I love/hate the word X" on Twitter and add them to Wordnik word lists.',
+def do_argparse(description=None):
+    parser = argparse.ArgumentParser(description=description,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     TWEET_CHOICES=('none', 'latest', 'latest_onetweet', '24hours', '7days', '30days', 'alltime', 'random')
     parser.add_argument('-t', '--tweet', default='latest', choices=TWEET_CHOICES,
         help="How to tweet the results.")
-    args = parser.parse_args()
-    return args
+    return parser
 
 # The `stuff` list looks like:
 #     [
@@ -86,10 +85,7 @@ def update_csv(csv_file, search_term, words, statuses):
     finally:
         fd.close()
 
-def find_words(search_term, target_word_follows_search_term, results, csv_file):
-    words = []
-    statuses = []
-
+def get_pattern(search_term, target_word_follows_search_term):
     # word boundary,one or more word chars, any '-*, one or more word chars, word boundary
     word_pattern = "[^\w]*(\w+(['-\*]*\w)*)[^\w]*"
     
@@ -112,38 +108,58 @@ def find_words(search_term, target_word_follows_search_term, results, csv_file):
     # exclamation mark, comma] and then "is my new etc."
         pattern = re.compile(word_pattern + "\s+" + search_term,
             re.IGNORECASE | re.UNICODE)
+    
+    return pattern
+
+def word_from_text(text, pattern, search_term):
+    """ If matching word found in tweet text, return it. Else return None """
+    print_it(text)
+
+    if text.startswith('RT'): # Ignore retweets
+        return None
+    if ' RT ' in text and text.find(' RT ') < text.find(search_term): # Ignore retweets
+        return None
+    if text[0] == u"\u201c": # ignore tweets beginning with a curly left double quote, they're often quoting another person's tweet
+        return None
+    if text.startswith('"@'): # ignore, probably quoting another's tweet (but don't ignore: '"word" is my new favourite')
+        return None
+
+    match = re.search(pattern, text)
+    if match:
+        word = match.group(1).lower()
+
+        # Ignore some common words
+        if word.lower() in ["it", "this", "that", "which", "and", "a", "of", "in", "but", "there"]:
+            return None
+
+        if len(word) == 0:
+            return None
+
+        # OK, got something
+        print_it(">" + word + "<")
+        return word
+
+    # Nothing found
+    return None
+
+def extract_words(search_term, target_word_follows_search_term, results):
+    words = []
+    statuses = []
+    pattern = get_pattern(search_term, target_word_follows_search_term)
 
     for status in results['statuses']:
         text = status['text']
         print "----"
-        print_it(text)
-
-        if text.startswith('RT'): # Ignore retweets
-            continue
-        if ' RT ' in text and text.find(' RT ') < text.find(search_term): # Ignore retweets
-            continue
-        if text[0] == u"\u201c": # ignore tweets beginning with a curly left double quote, they're often quoting another person's tweet
-            continue
-        if text.startswith('"@'): # ignore, probably quoting another's tweet (but don't ignore: '"word" is my new favourite')
-            continue
-
-        match = re.search(pattern, text)
-        if match:
-            word = match.group(1).lower()
-
-            # Ignore some common words
-            if word.lower() in ["it", "this", "that", "which", "and", "a", "of", "in", "but", "there"]:
-                continue
-
-            if len(word) == 0:
-                continue
-
-            # OK, got something
-            print_it(">" + word + "<")
+        word = word_from_text(text, pattern, search_term)
+        if word is not None:
             # print_it(status['user']['screen_name'])
             words.append(word)
             statuses.append(status)
 
+    return words, statuses
+
+def find_words(search_term, target_word_follows_search_term, results, csv_file):
+    words, statuses = extract_words(search_term, target_word_follows_search_term, results)
     update_csv(csv_file, search_term, words, statuses)
     return words
 
