@@ -53,5 +53,8 @@ The word lists on Wordnik:
  * http://www.wordnik.com/lists/twitter-isnts
  * http://www.wordnik.com/lists/twitter-aints
 
-(Not on Twitter yet or word clouded.)
+Follow along:
+ * https://twitter.com/nixibot
+
+(Not yet word clouded.)
 
