@@ -343,7 +343,7 @@ def tweet_those(words, tweet_prefix, csv_file = None, search_term = None, mode =
         extra_prefix += " (30 days)"
     elif mode == "alltime":
         words = load_words_from_csv(csv_file, search_term, None)
-        extra_prefix += " (2013's top words!)"
+        extra_prefix += " (all time)"
     else:
         print "Unknown mode:", mode
         return
