@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     for i,search_term in enumerate(STUFF[0]):
         STUFF[1][i], results = word_tools.get_words_from_twitter(search_term, STUFF[1][i])
-        words = word_tools.find_words(search_term, TARGET_WORD_FOLLOWS_SEARCH_TERM, results, CSV_FILE)
+        words = word_tools.find_words(search_term, TARGET_WORD_FOLLOWS_SEARCH_TERM, results, args.csv)
 
         if not TEST_MODE:
             word_tools.add_to_wordnik(words, STUFF[2][i])
