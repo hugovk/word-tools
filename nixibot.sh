@@ -1,6 +1,6 @@
-CSV_FILE=~/Dropbox/bin/data/not_a_word.csv
+CSV_FILE=~/Dropbox/bin/data/nixibot.csv
 
-DEDUPE=/tmp/not_a_word.csv
+DEDUPE=/tmp/nixibot.csv
 rm $DEDUPE
 awk '!a[$0]++' $CSV_FILE > $DEDUPE
 

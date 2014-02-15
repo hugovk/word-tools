@@ -30,10 +30,10 @@ if __name__ == '__main__':
     # args = word_tools.do_argparse()
     parser = word_tools.do_argparse("Find examples of \"X is not/isn't/ain't a word\" on Twitter and add them to Wordnik word lists.")
     parser.add_argument('-i', '--ini', 
-        default='/Users/hugo/Dropbox/bin/data/not_a_word.ini', 
+        default='/Users/hugo/Dropbox/bin/data/nixibot.ini', 
         help='INI file location for storing last Twitter ID checked')
     parser.add_argument('-c', '--csv', 
-        default='/Users/hugo/Dropbox/bin/data/not_a_word.csv', 
+        default='/Users/hugo/Dropbox/bin/data/nixibot.csv', 
         help='CSV file location for storing matching tweets')
     args = parser.parse_args()
 

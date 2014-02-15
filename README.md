@@ -43,8 +43,8 @@ Word clouds from the first month:
  * https://secure.flickr.com/photos/hugovk/11114253096/
  * https://secure.flickr.com/photos/hugovk/11114260534/
 
-not_a_word
-----------
+nixibot
+-------
 
 Similar again, but for "[X] is not a word", "[X] isn't a word" and "[X] ain't a word".
 
@@ -55,6 +55,9 @@ The word lists on Wordnik:
 
 Follow along:
  * https://twitter.com/nixibot
+
+See also:
+ * https://twitter.com/nixicon
 
 (Not yet word clouded.)
 
