@@ -15,6 +15,8 @@ import time
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
 
+TWEET_CHOICES=('none', 'latest', 'latest_onetweet', '24hours', '7days', '30days', 'alltime', 'random')
+
 # Remove duplicates from a list but keep in order
 # http://stackoverflow.com/questions/480214/
 def dedupe(seq):
@@ -29,7 +31,6 @@ def print_it(text):
 def do_argparse(description=None):
     parser = argparse.ArgumentParser(description=description,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    TWEET_CHOICES=('none', 'latest', 'latest_onetweet', '24hours', '7days', '30days', 'alltime', 'random')
     parser.add_argument('-t', '--tweet', default='latest', choices=TWEET_CHOICES,
         help="How to tweet the results.")
     return parser

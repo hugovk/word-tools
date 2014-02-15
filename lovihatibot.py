@@ -29,10 +29,10 @@ TEST_MODE = False
 if __name__ == '__main__':
     parser = word_tools.do_argparse('Find examples of "I love/hate the word X" on Twitter and add them to Wordnik word lists.')
     parser.add_argument('-i', '--ini', 
-        default='/Users/hugo/Dropbox/bin/data/lovehatetheword.ini', 
+        default='/Users/hugo/Dropbox/bin/data/lovihatibot.ini', 
         help='INI file location for storing last Twitter ID checked')
     parser.add_argument('-c', '--csv', 
-        default='/Users/hugo/Dropbox/bin/data/lovehatetheword.csv', 
+        default='/Users/hugo/Dropbox/bin/data/lovihatibot.csv', 
         help='CSV file location for storing matching tweets')
     args = parser.parse_args()
     
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
         if args.tweet == "random":
             from random import choice
-            args.tweet = choice(TWEET_CHOICES[1:-1]) # exclude none and random
+            args.tweet = choice(word_tools.TWEET_CHOICES[1:-1]) # exclude none and random
             print "Random tweet type:", args.tweet
 
         word_tools.tweet_those(words, tweet_prefix, args.csv, search_term, args.tweet)

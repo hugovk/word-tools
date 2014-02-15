@@ -85,7 +85,53 @@ class TestFindWords(unittest.TestCase):
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "madting")
 
+    def test_word15(self):
+        text = u"I hate the word ❌NO❌ like y'all nigga hate a bitch dat uses her teeth on da dick."
+        word = word_tools.word_from_text(text, self.pattern, self.search_term)
+        self.assertEqual(word, "no")
 
+    def test_word16(self):
+        text = u"@QuayNastyy Lmao So What Would Call Me ? Cause I HATE The Word Boo ."
+        word = word_tools.word_from_text(text, self.pattern, self.search_term)
+        self.assertEqual(word, "boo")
+
+    def test_word17(self):
+        text = u"i hate the word expand"
+        word = word_tools.word_from_text(text, self.pattern, self.search_term)
+        self.assertEqual(word, "expand")
+
+    # def test_word18(self):
+        # text = u"i hate the word glove(s)"
+        # word = word_tools.word_from_text(text, self.pattern, self.search_term)
+        # self.assertEqual(word, "glove")
+
+    def test_add_string_to_wordnik(self):
+        words = ['string']
+        wordlist_permalink = "test--47"
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+
+    def test_add_string_to_wordnik(self):
+        words = ['string2', 'string3']
+        wordlist_permalink = "test--47"
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+
+    def test_add_unicode_to_wordnik(self):
+        words = [u'unicode']
+        wordlist_permalink = "test--47"
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+        # Windows: AttributeError: 'unicode' object has no attribute '__dict__'
+
+    def test_add_unicodes_to_wordnik(self):
+        words = [u'unicode2', u'unicode3']
+        wordlist_permalink = "test--47"
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+        # Windows: AttributeError: 'unicode' object has no attribute '__dict__'
+
+    def test_add_mix_to_wordnik(self):
+        words = ['string4', u'unicode4']
+        wordlist_permalink = "test--47"
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+        # Windows: AttributeError: 'unicode' object has no attribute '__dict__'
 
 
 if __name__ == '__main__':
