@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 """
 Unit tests for word_tools.py
 """
 import unittest
 import word_tools
+
 
 class TestFindWords(unittest.TestCase):
 
@@ -12,7 +13,7 @@ class TestFindWords(unittest.TestCase):
         self.search_term = "I hate the word"
         self.target_word_follows_search_term = True
         self.pattern = word_tools.get_pattern(
-            self.search_term, 
+            self.search_term,
             self.target_word_follows_search_term)
 
     def test_word1(self):
@@ -102,7 +103,8 @@ class TestFindWords(unittest.TestCase):
 
     # def test_word18(self):
         # text = u"i hate the word glove(s)"
-        # word = word_tools.word_from_text(text, self.pattern, self.search_term)
+        # word = word_tools.word_from_text(
+        #     text, self.pattern, self.search_term)
         # self.assertEqual(word, "glove")
 
     def test_add_string_to_wordnik(self):
@@ -110,7 +112,7 @@ class TestFindWords(unittest.TestCase):
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
-    def test_add_string_to_wordnik(self):
+    def test_add_strings_to_wordnik(self):
         words = ['string2', 'string3']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
