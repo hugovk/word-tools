@@ -9,14 +9,15 @@ python:
   - "pypy"
 
 install:
-- pip install -r requirements.txt
+- pip install twitter
 - pip install coveralls
+ - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "3" ]; then pip install wordnik-py3; else pip install wordnik; fi
 
 script: coverage run --source=word_tools.py test_word_tools.py
 
 after_success:
-  coverage report
-  coveralls
+  - coverage report
+  - coveralls
 
 matrix:
   allow_failures:
