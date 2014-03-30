@@ -37,8 +37,11 @@ if __name__ == "__main__":
     word_list = open(args.infile).read().splitlines()
     most_common = most_frequent_words_and_counts(word_list, args.number)
 
-    print args.infile, "contains", commafy(len(word_list)), "words and", commafy(len(most_frequent_words_and_counts(word_list))), "unique words.\nThe top", commafy(args.number), "words are:"
+    print(
+        args.infile + " contains " + commafy(len(word_list)) + " words and " +
+        commafy(len(most_frequent_words_and_counts(word_list))) +
+        " unique words.\nThe top " + commafy(args.number) + " words are: ")
     for i, (word, count) in enumerate(most_common):
-        print commafy(i+1) + ".", word, "(" + commafy(count) + ")"
+        print(commafy(i+1) + ". " + word + " (" + commafy(count) + ")")
 
 # End of file

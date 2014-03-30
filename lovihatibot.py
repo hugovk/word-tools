@@ -65,7 +65,7 @@ if __name__ == '__main__':
             from random import choice
             # exclude none and random:
             args.tweet = choice(word_tools.TWEET_CHOICES[1:-1])
-            print "Random tweet type:", args.tweet
+            print("Random tweet type:" + args.tweet)
 
         word_tools.tweet_those(
             words, tweet_prefix, args.csv, search_term, args.tweet)

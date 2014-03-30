@@ -30,7 +30,7 @@ def dedupe(seq):
 
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
-    print text.encode('utf-8')
+    print(text.encode('utf-8'))
 
 
 def do_argparse(description=None):
@@ -54,17 +54,17 @@ def load_ini(ini_file, stuff):
     config = ConfigParser.ConfigParser()
     result = config.read(ini_file)
     if result:
-        # print summary
+        # print(summary)
         for i in range(len(stuff[1])):
             # Load max IDs using permalink as key
             stuff[1][i] = config.get("max_ids", stuff[2][i])
     return stuff
 
-    print "Loaded:", stuff[1]
+    print("Loaded: " + stuff[1])
 
 
 def save_ini(ini_file, stuff):
-    print "Save:", stuff[1]
+    print("Save: " + stuff[1])
 
     config = ConfigParser.ConfigParser()
     config.add_section("max_ids")
@@ -188,7 +188,7 @@ def extract_words(search_term, target_word_follows_search_term, results):
 
     for status in results['statuses']:
         text = status['text']
-        print "----"
+        print("----")
         word = word_from_text(text, pattern, search_term)
         if word is not None:
             # print_it(status['user']['screen_name'])
@@ -245,7 +245,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
             text = row[text_colnum]
             if text[0] == "@" and \
                     "I love the word douchebag. http://t.co/" in text:
-#                 print row[text_colnum]
+#                 print(row[text_colnum])
                 continue
 
             # seconds since epoch:
@@ -293,7 +293,7 @@ def get_wordnik_token():
     accountApi = AccountApi.AccountApi(wordnik_client)
     result = accountApi.authenticate(my_username, my_password)
     token = result.token
-    print "Your Wordnik token is:", token
+    print("Your Wordnik token is: " + token)
     return token
 
 
@@ -315,7 +315,7 @@ def add_to_wordnik(words, wordlist_permalink):
         number = "1 word"
     else:
         number = str(len(words)) + " words"
-    print "Adding " + number + " to Wordnik list:", wordlist_permalink
+    print("Adding " + number + " to Wordnik list:" + wordlist_permalink)
 
     from wordnik.models import StringValue
     words_to_add = []
@@ -324,12 +324,12 @@ def add_to_wordnik(words, wordlist_permalink):
         word_to_add.word = word
         words_to_add.append(word_to_add)
 
-    print wordlist_permalink, WORDNIK_TOKEN, words
+    print(wordlist_permalink + " " + WORDNIK_TOKEN + " " + " ".join(words))
 
     wordListApi.addWordsToWordList(
         wordlist_permalink, WORDNIK_TOKEN, body=words_to_add)
 
-    print len(words), "words added"
+    print(str(len(words)) + " words added")
 
 
 ################## TWITTER ##################
@@ -349,11 +349,11 @@ def get_words_from_twitter(search_term, since_id=0):
     results = t.search.tweets(
         q='"' + search_term + '"', count=100, since_id=int(since_id))
 
-    print results['search_metadata']
-    print "Requested:\t", results['search_metadata']['count']
-    print "Found:\t", len(results['statuses'])
+    print(results['search_metadata'])
+    print("Requested:\t" + results['search_metadata']['count'])
+    print("Found:\t" + len(results['statuses']))
     max_id = results['search_metadata']['max_id']
-    print "Max ID:\t", max_id
+    print("Max ID:\t" + str(max_id))
 
     return max_id, results
 
@@ -364,13 +364,13 @@ def tweet_string(string):
     if len(string) + 1 <= 140:  # Finish properly, if there's room
         string += "."
 
-    print "TWEET THIS:", string
+    print("TWEET THIS: " + string)
 
     if not TEST_MODE:
         try:
             t.statuses.update(status=string)
-        except Exception, e:
-            print str(e)
+        except Exception as e:
+            print(str(e))
 
 
 def tweet_those(
@@ -399,7 +399,7 @@ def tweet_those(
         words = load_words_from_csv(csv_file, search_term, None)
         extra_prefix += " (all time)"
     else:
-        print "Unknown mode:", mode
+        print("Unknown mode: " + mode)
         return
 
     if len(words) < 1:  # validation
