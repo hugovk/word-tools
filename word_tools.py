@@ -67,7 +67,7 @@ def load_ini(ini_file, stuff):
 
 
 def save_ini(ini_file, stuff):
-    print("Save: " + stuff[1])
+    print("Save: " + str(stuff[1]))
 
     config = configparser.ConfigParser()
     config.add_section("max_ids")
@@ -353,8 +353,8 @@ def get_words_from_twitter(search_term, since_id=0):
         q='"' + search_term + '"', count=100, since_id=int(since_id))
 
     print(results['search_metadata'])
-    print("Requested:\t" + results['search_metadata']['count'])
-    print("Found:\t" + len(results['statuses']))
+    print("Requested:\t" + str(results['search_metadata']['count']))
+    print("Found:\t" + str(len(results['statuses'])))
     max_id = results['search_metadata']['max_id']
     print("Max ID:\t" + str(max_id))
 
