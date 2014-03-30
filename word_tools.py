@@ -6,7 +6,10 @@ Wordnik and Twitter utility functions
 ################## GENERAL ##################
 
 import argparse
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 import csv
 import re
 import os
@@ -51,7 +54,7 @@ def do_argparse(description=None):
 
 
 def load_ini(ini_file, stuff):
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     result = config.read(ini_file)
     if result:
         # print(summary)
@@ -66,7 +69,7 @@ def load_ini(ini_file, stuff):
 def save_ini(ini_file, stuff):
     print("Save: " + stuff[1])
 
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.add_section("max_ids")
     for i in range(len(stuff[1])):
         # Save max IDs using permalink as key

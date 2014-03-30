@@ -8,7 +8,15 @@ python:
   - 3.4
   - "pypy"
 
-script: ./test_word_tools.py
+install:
+- pip install -r requirements.txt
+- pip install coveralls
+
+script: coverage run --source=word_tools.py test_word_tools.py
+
+after_success:
+  coverage report
+  coveralls
 
 matrix:
   allow_failures:
