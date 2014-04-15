@@ -10,8 +10,18 @@ import word_tools
 class TestFindWords(unittest.TestCase):
 
     def setUp(self):
+        self.setup_i_hate_the_word()
+
+    def setup_i_hate_the_word(self):
         self.search_term = "I hate the word"
         self.target_word_follows_search_term = True
+        self.pattern = word_tools.get_pattern(
+            self.search_term,
+            self.target_word_follows_search_term)
+
+    def setup_aint_a_word(self):
+        self.search_term = "ain't a word"
+        self.target_word_follows_search_term = False
         self.pattern = word_tools.get_pattern(
             self.search_term,
             self.target_word_follows_search_term)
@@ -101,11 +111,33 @@ class TestFindWords(unittest.TestCase):
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "expand")
 
-    # def test_word18(self):
-        # text = u"i hate the word glove(s)"
-        # word = word_tools.word_from_text(
-        #     text, self.pattern, self.search_term)
-        # self.assertEqual(word, "glove")
+    def test_word18(self):
+        text = u"i hate the word glove(s)"
+        word = word_tools.word_from_text(
+            text, self.pattern, self.search_term)
+        self.assertNotEqual(word, "glove(s")
+
+    def test_word19(self):
+        # Arrange
+        self.setup_aint_a_word()
+        text = u'"People(s)" ain\'t a word😒'
+
+        # Act
+        word = word_tools.word_from_text(
+            text, self.pattern, self.search_term)
+
+        # Assert
+        self.assertNotEqual(word, "people(s")
+
+    def test_word20(self):
+        # Arrange
+        self.setup_aint_a_word()
+        text = u'"You(s)"\nAin\'t a word either 😒"'
+
+        # Act
+        word = word_tools.word_from_text(
+            text, self.pattern, self.search_term)
+        self.assertNotEqual(word, "you(s")
 
     def test_add_string_to_wordnik(self):
         words = ['string']
@@ -121,19 +153,16 @@ class TestFindWords(unittest.TestCase):
         words = [u'unicode']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
-        # Windows: AttributeError: 'unicode' object has no attribute '__dict__'
 
     def test_add_unicodes_to_wordnik(self):
         words = [u'unicode2', u'unicode3']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
-        # Windows: AttributeError: 'unicode' object has no attribute '__dict__'
 
     def test_add_mix_to_wordnik(self):
         words = ['string4', u'unicode4']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
-        # Windows: AttributeError: 'unicode' object has no attribute '__dict__'
 
 
 if __name__ == '__main__':
