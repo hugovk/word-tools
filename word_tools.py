@@ -106,7 +106,7 @@ def update_csv(csv_file, search_term, words, statuses):
 
 
 def get_pattern(search_term, target_word_follows_search_term):
-    # word boundary,one or more word chars, any '-*,
+    # word boundary, one or more word chars, any '-*,
     # one or more word chars, word boundary
     word_pattern = "[^\w]*(\w+(['-\*]*\w)*)[^\w]*"
 
@@ -167,13 +167,25 @@ def word_from_text(text, pattern, search_term):
     if match:
         word = match.group(1).lower()
 
+        if len(word) == 0:
+            return None
+
         # Ignore some common words
         if word.lower() in [
                 "it", "this", "that", "which", "and",
                 "a", "of", "in", "but", "there"]:
             return None
 
-        if len(word) == 0:
+        # Ignore if any unbalanced brackets
+        open = 0
+        for char in word:
+            if char == "(":
+                open += 1
+            elif char == ")":
+                open -= 1
+            if open < 0:
+                return None
+        if open != 0:
             return None
 
         # OK, got something
@@ -337,15 +349,16 @@ def add_to_wordnik(words, wordlist_permalink):
 
 ################## TWITTER ##################
 
-from twitter import *  # https://github.com/sixohsix/twitter
+# https://github.com/sixohsix/twitter
+from twitter import Twitter, OAuth
 
 t = None
 
 
 def init_twitter(oauth_token, oauth_secret, consumer_key, consumer_secret):
     global t
-    t = Twitter(auth=OAuth(oauth_token, oauth_secret,
-                           consumer_key, consumer_secret))
+    t = Twitter.Twitter(auth=OAuth(oauth_token, oauth_secret,
+                        consumer_key, consumer_secret))
 
 
 def get_words_from_twitter(search_term, since_id=0):
