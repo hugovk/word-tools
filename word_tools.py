@@ -111,12 +111,12 @@ def get_pattern(search_term, target_word_follows_search_term):
     word_pattern = "[^\w]*(\w+(['-\*]*\w)*)[^\w]*"
 
     if target_word_follows_search_term:
-    # Matches search term ("I love the word")
-    # followed by whitespace then at least one
-    # [whitespace, period, exclamation mark, comma,
-    # brackets, question mark]
-#         pattern = re.compile(
-#             search_term + "\s+([^\s.!,()?]+)", re.IGNORECASE)
+        # Matches search term ("I love the word")
+        # followed by whitespace then at least one
+        # [whitespace, period, exclamation mark, comma,
+        # brackets, question mark]
+        # pattern = re.compile(
+            # search_term + "\s+([^\s.!,()?]+)", re.IGNORECASE)
 
         # \s = whitespace
         # \w = word characters (a-zA-Z0-9_) but re.UNICODE allows umlauts
@@ -128,12 +128,12 @@ def get_pattern(search_term, target_word_follows_search_term):
             search_term + "\s+" + word_pattern,
             re.IGNORECASE | re.UNICODE)
     else:
-    # Matches at least something that's NOT
-    # [whitespace, period, exclamation mark, comma,
-    # open bracket, close bracket],
-    # followed by at least one
-    # [whitespace, period, exclamation mark, comma]
-    # and then "is my new etc."
+        # Matches at least something that's NOT
+        # [whitespace, period, exclamation mark, comma,
+        # open bracket, close bracket],
+        # followed by at least one
+        # [whitespace, period, exclamation mark, comma]
+        # and then "is my new etc."
         pattern = re.compile(
             word_pattern + "\s+" + search_term,
             re.IGNORECASE | re.UNICODE)
@@ -153,8 +153,8 @@ def word_from_text(text, pattern, search_term):
     if ' RT ' in text and text.find(' RT ') < text.find(search_term):
         return None
 
-     # Ignore tweets beginning with a curly left double quote,
-     # they're often quoting another person's tweet
+    # Ignore tweets beginning with a curly left double quote,
+    # they're often quoting another person's tweet
     if text[0] == u"\u201c":
         return None
 
@@ -260,7 +260,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
             text = row[text_colnum]
             if text[0] == "@" and \
                     "I love the word douchebag. http://t.co/" in text:
-#                 print(row[text_colnum])
+                # print(row[text_colnum])
                 continue
 
             # seconds since epoch:
@@ -321,7 +321,7 @@ def add_to_wordnik(words, wordlist_permalink):
 
     global WORDNIK_TOKEN
     if WORDNIK_TOKEN is None:
-    # Only need to do this once
+        # Only need to do this once
         WORDNIK_TOKEN = get_wordnik_token()
 
     words.sort()
@@ -437,7 +437,7 @@ def tweet_those(
         if i == 0:
             new_tweet = tweet + word
         else:
-#             new_tweet = tweet + ", " + word
+            # new_tweet = tweet + ", " + word
             new_tweet = tweet + " " + word
         if len(new_tweet) > 140:
             break
