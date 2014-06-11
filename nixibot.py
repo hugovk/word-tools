@@ -57,7 +57,7 @@ if __name__ == '__main__':
             word_tools.add_to_wordnik(words, STUFF[2][i])
 
         tweet_prefix = STUFF[0][i]
-#        tweet_prefix = u"\u2605 " + tweet_prefix # heart
+        tweet_prefix = u"\u2260 " + tweet_prefix # not equal to
 
         if args.tweet == "random":
             from random import choice
