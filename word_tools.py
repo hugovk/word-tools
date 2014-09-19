@@ -339,7 +339,7 @@ def add_to_wordnik(words, wordlist_permalink):
         word_to_add.word = word
         words_to_add.append(word_to_add)
 
-    print(wordlist_permalink + " " + WORDNIK_TOKEN + " " + " ".join(words))
+    print_it(wordlist_permalink + " " + WORDNIK_TOKEN + " " + " ".join(words))
 
     wordListApi.addWordsToWordList(
         wordlist_permalink, WORDNIK_TOKEN, body=words_to_add)
@@ -380,7 +380,7 @@ def tweet_string(string):
     if len(string) + 1 <= 140:  # Finish properly, if there's room
         string += "."
 
-    print("TWEET THIS: " + string)
+    print_it("TWEET THIS: " + string)
 
     if not TEST_MODE:
         try:
