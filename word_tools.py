@@ -267,7 +267,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
             timestamp = time.mktime(time.strptime(
                 row[created_at_colnum], '%a %b %d %H:%M:%S +0000 %Y'))
             if timestamp > cutoff:
-                matched_words.append(row[word_colnum])
+                matched_words.append(row[word_colnum].decode('utf-8'))
 
     ifile.close()
 
@@ -357,7 +357,7 @@ t = None
 
 def init_twitter(oauth_token, oauth_secret, consumer_key, consumer_secret):
     global t
-    t = Twitter.Twitter(auth=OAuth(oauth_token, oauth_secret,
+    t = Twitter(auth=OAuth(oauth_token, oauth_secret,
                         consumer_key, consumer_secret))
 
 
@@ -389,6 +389,26 @@ def tweet_string(string):
             print(str(e))
 
 
+def update_tweet_with_words(tweet, words):
+    """
+    IN: tweet with a prefix, list of words
+    OUT: updated tweet, list of words_remaining
+    """
+    new_tweet = tweet
+    words_remaining = list(words)
+    for i, word in enumerate(words):
+        if i == 0:
+            new_tweet = tweet + word
+        else:
+#             new_tweet = tweet + ", " + word
+            new_tweet = tweet + " " + word
+        if len(new_tweet) > 140:
+            break
+        else:
+            tweet = new_tweet
+        words_remaining.pop(0)
+    return tweet, words_remaining
+
 def tweet_those(
         words, tweet_prefix, csv_file=None, search_term=None, mode="latest"):
     # Remove duplicates
@@ -396,7 +416,7 @@ def tweet_those(
 
     shuffle, tweet_all_words = False, False
     extra_prefix = ""
-    if mode == "none" or TEST_MODE:
+    if mode == "none":
         return
     elif mode == "latest":
         tweet_all_words = True
@@ -430,20 +450,8 @@ def tweet_those(
         tweet += extra_prefix + ": "
     else:
         tweet += "s" + extra_prefix + ": "
-    new_tweet = tweet
 
-    words_remaining = list(words)
-    for i, word in enumerate(words):
-        if i == 0:
-            new_tweet = tweet + word
-        else:
-            # new_tweet = tweet + ", " + word
-            new_tweet = tweet + " " + word
-        if len(new_tweet) > 140:
-            break
-        else:
-            tweet = new_tweet
-        words_remaining.pop(0)
+    tweet, words_remaining = update_tweet_with_words(tweet, words)
 
     tweet_string(tweet)
 
