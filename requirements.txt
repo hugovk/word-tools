@@ -1,4 +1,2 @@
 twitter
-# Wordnik haven't released Unicode fixes yet, so use latest source instead of pip
-# wordnik
--e git://github.com/wordnik/wordnik-python.git#egg=wordnik
+wordnik
