@@ -241,6 +241,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
 
     word_colnum, searchterm_colnum, created_at_colnum = None, None, None
     matched_words = []
+    seen = set()  # avoid duplicates
     ifile = open(csv_file, "rb")
     reader = csv.reader(ifile)
 
@@ -252,8 +253,14 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
             searchterm_colnum = find_colnum("search_term", row)
             created_at_colnum = find_colnum("created_at", row)
             text_colnum = find_colnum("text", row)
+            id_str_colnum = find_colnum("id_str", row)
 
         else:  # not header
+            # Avoid duplicates
+            if row[id_str_colnum] in seen:
+                continue
+            seen.add(row[id_str_colnum])
+
             # Kill the spambot!
             if row[searchterm_colnum] != search_term:
                 continue
@@ -305,8 +312,8 @@ def get_wordnik_token():
     else:
         my_password = getpass.getpass("Enter your Wordnik password: ")
 
-    accountApi = AccountApi.AccountApi(wordnik_client)
-    result = accountApi.authenticate(my_username, my_password)
+    account_api = AccountApi.AccountApi(wordnik_client)
+    result = account_api.authenticate(my_username, my_password)
     token = result.token
     print("Your Wordnik token is: " + token)
     return token
@@ -358,7 +365,7 @@ t = None
 def init_twitter(oauth_token, oauth_secret, consumer_key, consumer_secret):
     global t
     t = Twitter(auth=OAuth(oauth_token, oauth_secret,
-                        consumer_key, consumer_secret))
+                           consumer_key, consumer_secret))
 
 
 def get_words_from_twitter(search_term, since_id=0):
@@ -408,6 +415,7 @@ def update_tweet_with_words(tweet, words):
             tweet = new_tweet
         words_remaining.pop(0)
     return tweet, words_remaining
+
 
 def tweet_those(
         words, tweet_prefix, csv_file=None, search_term=None, mode="latest"):
