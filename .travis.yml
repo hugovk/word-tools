@@ -8,6 +8,8 @@ python:
   - 3.4
   - "pypy"
 
+sudo: false
+
 install:
   - pip install twitter
   - pip install coveralls
