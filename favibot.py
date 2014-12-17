@@ -8,7 +8,7 @@ import word_tools
 # Optional, http://stackoverflow.com/a/1557906/724176
 try:
     import timing
-except:
+except ImportError:
     pass
 
 # Twitter: create an app at https://dev.twitter.com/apps/new
