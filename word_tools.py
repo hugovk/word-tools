@@ -287,7 +287,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
 
 ################## WORDNIK ##################
 
-from wordnik import *
+from wordnik import swagger, AccountApi, WordListApi
 
 # Wordnik: get API key at http://developer.wordnik.com/
 WORDNIK_API_KEY = "3fd3445662c1ac873962d06094f057f39d4711730e1adc28f"

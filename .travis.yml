@@ -15,16 +15,13 @@ cache:
     - $HOME/.pip-cache/
 
 install:
-  - pip install twitter
-
-install:
   - pip install flake8
   - pip install twitter
   - pip install coveralls
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then pip install wordnik-py3; else pip install wordnik; fi
 
 before_script:
-  - flake8 .
+  - pyflakes .
 
 script: coverage run --source=word_tools.py test_word_tools.py
 
