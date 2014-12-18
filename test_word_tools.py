@@ -67,7 +67,9 @@ class TestFindWords(unittest.TestCase):
         self.assertEqual(word, "couture")
 
     def test_word9(self):
-        text = u'I hate the word "spooky", bro the fuck you mean " dis nigga movin spooky" sounds like some shaggy n scooby doo type shit son'
+        text = (u'I hate the word "spooky", bro the fuck you mean '
+                '" dis nigga movin spooky" sounds like some shaggy '
+                'n scooby doo type shit son')
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "spooky")
 
@@ -77,7 +79,8 @@ class TestFindWords(unittest.TestCase):
         self.assertEqual(word, "flee")
 
     def test_word11(self):
-        text = u'I HATE the word bae....it seems like you just too lazy to say babe'
+        text = (u'I HATE the word bae....'
+                'it seems like you just too lazy to say babe')
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "bae")
 
@@ -97,12 +100,14 @@ class TestFindWords(unittest.TestCase):
         self.assertEqual(word, "madting")
 
     def test_word15(self):
-        text = u"I hate the word ❌NO❌ like y'all nigga hate a bitch dat uses her teeth on da dick."
+        text = (u"I hate the word ❌NO❌ like y'all nigga hate a bitch dat "
+                "uses her teeth on da dick.")
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "no")
 
     def test_word16(self):
-        text = u"@QuayNastyy Lmao So What Would Call Me ? Cause I HATE The Word Boo ."
+        text = (u"@QuayNastyy Lmao So What Would Call Me ? "
+                "Cause I HATE The Word Boo .")
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "boo")
 

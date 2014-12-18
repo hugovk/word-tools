@@ -3,7 +3,7 @@
 Wordnik and Twitter utility functions
 """
 
-################## GENERAL ##################
+# ================ GENERAL ==================
 
 import argparse
 try:
@@ -21,6 +21,8 @@ TEST_MODE = False
 TWEET_CHOICES = (
     'none', 'latest', 'latest_onetweet',
     '24hours', '7days', '30days', 'alltime', 'random')
+
+DAY_IN_SECONDS = 24 * 60 * 60
 
 
 # Remove duplicates from a list but keep in order
@@ -285,7 +287,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
     top_words = most_frequent_words.most_frequent_words(matched_words, 140/3)
     return top_words
 
-################## WORDNIK ##################
+# ================= WORDNIK ==================
 
 from wordnik import swagger, AccountApi, WordListApi
 
@@ -354,7 +356,7 @@ def add_to_wordnik(words, wordlist_permalink):
     print(str(len(words)) + " words added")
 
 
-################## TWITTER ##################
+# ================ TWITTER ==================
 
 # https://github.com/sixohsix/twitter
 from twitter import Twitter, OAuth
@@ -407,7 +409,7 @@ def update_tweet_with_words(tweet, words):
         if i == 0:
             new_tweet = tweet + word
         else:
-#             new_tweet = tweet + ", " + word
+            # new_tweet = tweet + ", " + word
             new_tweet = tweet + " " + word
         if len(new_tweet) > 140:
             break
@@ -431,13 +433,13 @@ def tweet_those(
     elif mode == "latest_onetweet":
         shuffle = True
     elif mode == "24hours":
-        words = load_words_from_csv(csv_file, search_term, 24 * 60 * 60 * 60)
+        words = load_words_from_csv(csv_file, search_term, DAY_IN_SECONDS)
         extra_prefix += " (24 hours)"
     elif mode == "7days":
-        words = load_words_from_csv(csv_file, search_term, 7 * 24 * 60 * 60 * 60)
+        words = load_words_from_csv(csv_file, search_term, 7 * DAY_IN_SECONDS)
         extra_prefix += " (7 days)"
     elif mode == "30days":
-        words = load_words_from_csv(csv_file, search_term, 30 * 24 * 60 * 60 * 60)
+        words = load_words_from_csv(csv_file, search_term, 30 * DAY_IN_SECONDS)
         extra_prefix += " (30 days)"
     elif mode == "alltime":
         words = load_words_from_csv(csv_file, search_term, None)

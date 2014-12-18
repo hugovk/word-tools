@@ -21,7 +21,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then pip install wordnik-py3; else pip install wordnik; fi
 
 before_script:
-  - pyflakes .
+  - flake8 .
 
 script: coverage run --source=word_tools.py test_word_tools.py
 

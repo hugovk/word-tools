@@ -32,7 +32,9 @@ TARGET_WORD_FOLLOWS_SEARCH_TERM = True
 TEST_MODE = False
 
 if __name__ == '__main__':
-    parser = word_tools.do_argparse('Find examples of "I love/hate the word X" on Twitter and add them to Wordnik word lists.')
+    parser = word_tools.do_argparse(
+        'Find examples of "I love/hate the word X" '
+        'on Twitter and add them to Wordnik word lists.')
     parser.add_argument(
         '-i', '--ini',
         default='/Users/hugo/Dropbox/bin/data/lovihatibot.ini',

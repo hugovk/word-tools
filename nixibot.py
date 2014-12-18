@@ -22,7 +22,8 @@ isnot_max_id, isnt_max_id, aint_max_id = 0, 0, 0
 STUFF = [
     ["ain't a word", "isn't a word", "is not a word"],  # search term
     [aint_max_id, isnt_max_id, isnot_max_id],
-    ["twitter-aints", "twitter-isnts", "twitter-isnots", ]  # Wordnik word list permalink
+    # Wordnik word list permalink:
+    ["twitter-aints", "twitter-isnts", "twitter-isnots", ]
     ]
 
 # e.g. "I love the word X" (True) or "X is my favourite new word" (False)?
@@ -33,7 +34,9 @@ TEST_MODE = True
 
 if __name__ == '__main__':
     # args = word_tools.do_argparse()
-    parser = word_tools.do_argparse("Find examples of \"X is not/isn't/ain't a word\" on Twitter and add them to Wordnik word lists.")
+    parser = word_tools.do_argparse(
+        "Find examples of \"X is not/isn't/ain't "
+        "a word\" on Twitter and add them to Wordnik word lists.")
     parser.add_argument(
         '-i', '--ini',
         default='/Users/hugo/Dropbox/bin/data/nixibot.ini',
@@ -58,7 +61,7 @@ if __name__ == '__main__':
             word_tools.add_to_wordnik(words, STUFF[2][i])
 
         tweet_prefix = STUFF[0][i]
-        tweet_prefix = u"\u2260 " + tweet_prefix # not equal to
+        tweet_prefix = u"\u2260 " + tweet_prefix  # not equal to
 
         if args.tweet == "random":
             from random import choice
