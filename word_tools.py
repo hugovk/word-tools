@@ -15,6 +15,12 @@ import re
 import os
 import time
 
+# For Python 2.x
+try:
+    input = raw_input
+except NameError:
+    pass
+
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
 
@@ -308,7 +314,7 @@ def get_wordnik_token():
     if WORDNIK_USERNAME:
         my_username = WORDNIK_USERNAME
     else:
-        my_username = raw_input("Enter your Wordnik username: ")
+        my_username = input("Enter your Wordnik username: ")
     if WORDNIK_PASSWORD:
         my_password = WORDNIK_PASSWORD
     else:
