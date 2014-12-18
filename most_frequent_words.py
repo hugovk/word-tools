@@ -17,14 +17,16 @@ def most_frequent_words_and_counts(word_list, number=None):
 
 
 def most_frequent_words(word_list, number=None):
-    words = [ite for ite, it in most_frequent_words_and_counts(word_list, number)]
+    words = [ite for ite, it in most_frequent_words_and_counts(
+        word_list, number)]
     return words
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(
-        description="Show the most common words of a newline-separated word list",
+        description="Show the most common words of a newline-separated "
+                    "word list",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
         'infile',

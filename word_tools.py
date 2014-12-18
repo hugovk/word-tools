@@ -3,7 +3,7 @@
 Wordnik and Twitter utility functions
 """
 
-################## GENERAL ##################
+# ================ GENERAL ==================
 
 import argparse
 try:
@@ -15,12 +15,20 @@ import re
 import os
 import time
 
+# For Python 2.x
+try:
+    input = raw_input
+except NameError:
+    pass
+
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
 
 TWEET_CHOICES = (
     'none', 'latest', 'latest_onetweet',
     '24hours', '7days', '30days', 'alltime', 'random')
+
+DAY_IN_SECONDS = 24 * 60 * 60
 
 
 # Remove duplicates from a list but keep in order
@@ -285,9 +293,9 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
     top_words = most_frequent_words.most_frequent_words(matched_words, 140/3)
     return top_words
 
-################## WORDNIK ##################
+# ================= WORDNIK ==================
 
-from wordnik import *
+from wordnik import swagger, AccountApi, WordListApi
 
 # Wordnik: get API key at http://developer.wordnik.com/
 WORDNIK_API_KEY = "3fd3445662c1ac873962d06094f057f39d4711730e1adc28f"
@@ -306,7 +314,7 @@ def get_wordnik_token():
     if WORDNIK_USERNAME:
         my_username = WORDNIK_USERNAME
     else:
-        my_username = raw_input("Enter your Wordnik username: ")
+        my_username = input("Enter your Wordnik username: ")
     if WORDNIK_PASSWORD:
         my_password = WORDNIK_PASSWORD
     else:
@@ -354,7 +362,7 @@ def add_to_wordnik(words, wordlist_permalink):
     print(str(len(words)) + " words added")
 
 
-################## TWITTER ##################
+# ================ TWITTER ==================
 
 # https://github.com/sixohsix/twitter
 from twitter import Twitter, OAuth
@@ -407,7 +415,7 @@ def update_tweet_with_words(tweet, words):
         if i == 0:
             new_tweet = tweet + word
         else:
-#             new_tweet = tweet + ", " + word
+            # new_tweet = tweet + ", " + word
             new_tweet = tweet + " " + word
         if len(new_tweet) > 140:
             break
@@ -431,13 +439,13 @@ def tweet_those(
     elif mode == "latest_onetweet":
         shuffle = True
     elif mode == "24hours":
-        words = load_words_from_csv(csv_file, search_term, 24 * 60 * 60 * 60)
+        words = load_words_from_csv(csv_file, search_term, DAY_IN_SECONDS)
         extra_prefix += " (24 hours)"
     elif mode == "7days":
-        words = load_words_from_csv(csv_file, search_term, 7 * 24 * 60 * 60 * 60)
+        words = load_words_from_csv(csv_file, search_term, 7 * DAY_IN_SECONDS)
         extra_prefix += " (7 days)"
     elif mode == "30days":
-        words = load_words_from_csv(csv_file, search_term, 30 * 24 * 60 * 60 * 60)
+        words = load_words_from_csv(csv_file, search_term, 30 * DAY_IN_SECONDS)
         extra_prefix += " (30 days)"
     elif mode == "alltime":
         words = load_words_from_csv(csv_file, search_term, None)

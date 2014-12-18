@@ -20,9 +20,12 @@ OAUTH_SECRET = "TODO_ENTER_YOURS_HERE"
 
 favourite_max_id, favorite_max_id, fave_max_id = 0, 0, 0
 STUFF = [
-    ["is my new fave word", "is my new favorite word", "is my new favourite word"],  # search term
+    # search term:
+    ["is my new fave word", "is my new favorite word",
+     "is my new favourite word"],
     [fave_max_id, favorite_max_id, favourite_max_id],
-    ["twitter-faves", "twitter-favorites", "twitter-favourites", ]  # Wordnik word list permalink
+    # Wordnik word list permalink:
+    ["twitter-faves", "twitter-favorites", "twitter-favourites", ]
     ]
 
 # e.g. "I love the word X" (True) or "X is my favourite new word" (False)?
@@ -33,7 +36,9 @@ TEST_MODE = False
 
 if __name__ == '__main__':
     # args = word_tools.do_argparse()
-    parser = word_tools.do_argparse('Find examples of "X is my new favourite/favorite/fave" on Twitter and add them to Wordnik word lists.')
+    parser = word_tools.do_argparse(
+        'Find examples of "X is my new favourite/favorite/fave" on Twitter '
+        'and add them to Wordnik word lists.')
     parser.add_argument(
         '-i', '--ini',
         default='/Users/hugo/Dropbox/bin/data/favibot.ini',
