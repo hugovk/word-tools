@@ -91,7 +91,7 @@ class TestFindWords(unittest.TestCase):
         self.assertEqual(word, "yall")
 
     def test_word13(self):
-        text = u"I hate the word 'Banter' it annoys me so muchí ½í¹ˆ"
+        text = u"I hate the word 'Banter' it annoys me so muchðŸ™ˆ"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "banter")
 
@@ -126,7 +126,7 @@ class TestFindWords(unittest.TestCase):
     def test_word19(self):
         # Arrange
         self.setup_aint_a_word()
-        text = u'"People(s)" ain\'t a wordí ½í¸’'
+        text = u'"People(s)" ain\'t a wordðŸ˜’'
 
         # Act
         word = word_tools.word_from_text(
@@ -138,7 +138,7 @@ class TestFindWords(unittest.TestCase):
     def test_word20(self):
         # Arrange
         self.setup_aint_a_word()
-        text = u'"You(s)"\nAin\'t a word either í ½í¸’"'
+        text = u'"You(s)"\nAin\'t a word either ðŸ˜’"'
 
         # Act
         word = word_tools.word_from_text(
@@ -215,3 +215,5 @@ class TestFindWords(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+# End of file
