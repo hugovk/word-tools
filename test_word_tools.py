@@ -147,17 +147,17 @@ class TestFindWords(unittest.TestCase):
 
     def test_load_words_from_csv_24_hours(self):
         words = word_tools.load_words_from_csv(
-            self.csv_file, self.search_term, 24 * 60 * 60 * 60)
+            self.csv_file, self.search_term, 24 * 60 * 60)
         self.assertIsInstance(words, list)
 
     def test_load_words_from_csv_7_days(self):
         words = word_tools.load_words_from_csv(
-            self.csv_file, self.search_term, 7 * 24 * 60 * 60 * 60)
+            self.csv_file, self.search_term, 7 * 24 * 60 * 60)
         self.assertIsInstance(words, list)
 
     def test_load_words_from_csv_30_days(self):
         words = word_tools.load_words_from_csv(
-            self.csv_file, self.search_term, 30 * 24 * 60 * 60 * 60)
+            self.csv_file, self.search_term, 30 * 24 * 60 * 60)
         self.assertIsInstance(words, list)
 
     def test_load_words_from_csv_all_time(self):

@@ -27,8 +27,9 @@ except NameError:
 TEST_MODE = False
 
 TWEET_CHOICES = (
-    'none', 'latest', 'latest_onetweet',
-    '24hours', '7days', '30days', 'thisyear', 'alltime', 'retweet',
+    'none',  # 'none' must be first
+    'latest', 'latest_onetweet', '24hours', '7days', '30days', 'thisyear',
+    'alltime', 'retweet',
     'random')  # 'random' must be last
 
 DAY_IN_SECONDS = 24 * 60 * 60
@@ -253,7 +254,7 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
     word_colnum, searchterm_colnum, created_at_colnum = None, None, None
     matched_words, eligable_ids = [], []
     seen = set()  # avoid duplicates
-    ifile = open(csv_file, "rb")
+    ifile = open(csv_file, "r")
     reader = csv.reader(ifile)
 
     for rownum, row in enumerate(reader):
