@@ -11,8 +11,10 @@ try:
 except ImportError:
     import configparser
 import csv
-import re
+import datetime
 import os
+import random
+import re
 import time
 
 # For Python 2.x
@@ -26,7 +28,8 @@ TEST_MODE = False
 
 TWEET_CHOICES = (
     'none', 'latest', 'latest_onetweet',
-    '24hours', '7days', '30days', 'alltime', 'random')
+    '24hours', '7days', '30days', 'thisyear', 'alltime', 'retweet',
+    'random')  # 'random' must be last
 
 DAY_IN_SECONDS = 24 * 60 * 60
 
@@ -240,15 +243,15 @@ def find_colnum(heading, row):
     return found_colnum
 
 
-def load_words_from_csv(csv_file, search_term, seconds_delta=None):
-    """Load the CSV and return the top words for a given time period"""
+def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
+    """Load the CSV and return a random ID from the given time period"""
     cutoff = 0
     if seconds_delta:
         epoch_time = int(time.time())
         cutoff = epoch_time - seconds_delta
 
     word_colnum, searchterm_colnum, created_at_colnum = None, None, None
-    matched_words = []
+    matched_words, eligable_ids = [], []
     seen = set()  # avoid duplicates
     ifile = open(csv_file, "rb")
     reader = csv.reader(ifile)
@@ -282,9 +285,29 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
             timestamp = time.mktime(time.strptime(
                 row[created_at_colnum], '%a %b %d %H:%M:%S +0000 %Y'))
             if timestamp > cutoff:
+                eligable_ids.append(row[id_str_colnum])
                 matched_words.append(row[word_colnum].decode('utf-8'))
 
     ifile.close()
+
+    return eligable_ids, matched_words
+
+
+def pick_a_random_tweet(csv_file, search_term, seconds_delta=None):
+    """Load the CSV and return a random ID from the given time period"""
+
+    eligable_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
+                                                         seconds_delta)
+
+    # Return a random ID
+    return random.choice(eligable_ids)
+
+
+def load_words_from_csv(csv_file, search_term, seconds_delta=None):
+    """Load the CSV and return the top words for a given time period"""
+
+    eligable_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
+                                                         seconds_delta)
 
     import most_frequent_words
     # Max tweet length is 140
@@ -389,6 +412,22 @@ def get_words_from_twitter(search_term, since_id=0):
     return max_id, results
 
 
+def retweet(id, trim_user=True):
+    print_it("RETWEET THIS: " + str(id))
+
+    if not TEST_MODE:
+        try:
+            t.statuses.retweet(id=id, trim_user=trim_user)
+        except Exception as e:
+            print(str(e))
+            # TODO If the account is now protected, we get an error like...
+            # Twitter sent status 403 for URL: 1.1/statuses/retweet/
+            # 012345678901234567.json using parameters: ...
+            # details: {"errors":"sharing is not permissible for this status
+            # (Share validations failed)"}
+            # ... so could try another.
+
+
 def tweet_string(string):
     if len(string) <= 0:
         return
@@ -432,7 +471,12 @@ def tweet_those(
 
     shuffle, tweet_all_words = False, False
     extra_prefix = ""
-    if mode == "none":
+
+    if mode == "retweet":
+        id = pick_a_random_tweet(csv_file, search_term, 7 * DAY_IN_SECONDS)
+        retweet(id)
+        return
+    elif mode == "none":
         return
     elif mode == "latest":
         tweet_all_words = True
@@ -447,6 +491,13 @@ def tweet_those(
     elif mode == "30days":
         words = load_words_from_csv(csv_file, search_term, 30 * DAY_IN_SECONDS)
         extra_prefix += " (30 days)"
+    elif mode == "thisyear":
+        # How many seconds since 1 Jan this year?
+        now = datetime.datetime.now()
+        year_start = datetime.datetime(now.year, month=1, day=1)
+        seconds_delta = (now - year_start).total_seconds()
+        words = load_words_from_csv(csv_file, search_term, seconds_delta)
+        extra_prefix += " (" + str(now.year) + ")"
     elif mode == "alltime":
         words = load_words_from_csv(csv_file, search_term, None)
         extra_prefix += " (all time)"
@@ -458,8 +509,7 @@ def tweet_those(
         return
 
     if shuffle:
-        from random import shuffle
-        shuffle(words)
+        random.shuffle(words)
 
     tweet = tweet_prefix
     if len(words) == 1:  # get the plural right

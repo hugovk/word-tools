@@ -9,8 +9,9 @@ import word_tools
 
 class TestFindWords(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self):  # noqa
         self.setup_i_hate_the_word()
+        self.csv_file = "test_word_tools.csv"
 
     def setup_i_hate_the_word(self):
         self.search_term = "I hate the word"
@@ -90,7 +91,7 @@ class TestFindWords(unittest.TestCase):
         self.assertEqual(word, "yall")
 
     def test_word13(self):
-        text = u"I hate the word 'Banter' it annoys me so muchðŸ™ˆ"
+        text = u"I hate the word 'Banter' it annoys me so muchí ½í¹ˆ"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "banter")
 
@@ -125,7 +126,7 @@ class TestFindWords(unittest.TestCase):
     def test_word19(self):
         # Arrange
         self.setup_aint_a_word()
-        text = u'"People(s)" ain\'t a wordðŸ˜’'
+        text = u'"People(s)" ain\'t a wordí ½í¸’'
 
         # Act
         word = word_tools.word_from_text(
@@ -137,12 +138,54 @@ class TestFindWords(unittest.TestCase):
     def test_word20(self):
         # Arrange
         self.setup_aint_a_word()
-        text = u'"You(s)"\nAin\'t a word either ðŸ˜’"'
+        text = u'"You(s)"\nAin\'t a word either í ½í¸’"'
 
         # Act
         word = word_tools.word_from_text(
             text, self.pattern, self.search_term)
         self.assertNotEqual(word, "you(s")
+
+    def test_load_words_from_csv_24_hours(self):
+        words = word_tools.load_words_from_csv(
+            self.csv_file, self.search_term, 24 * 60 * 60 * 60)
+        self.assertIsInstance(words, list)
+
+    def test_load_words_from_csv_7_days(self):
+        words = word_tools.load_words_from_csv(
+            self.csv_file, self.search_term, 7 * 24 * 60 * 60 * 60)
+        self.assertIsInstance(words, list)
+
+    def test_load_words_from_csv_30_days(self):
+        words = word_tools.load_words_from_csv(
+            self.csv_file, self.search_term, 30 * 24 * 60 * 60 * 60)
+        self.assertIsInstance(words, list)
+
+    def test_load_words_from_csv_all_time(self):
+        # Arrange
+        search_term = "I love the word"
+
+        # Act
+        words = word_tools.load_words_from_csv(
+            self.csv_file, search_term, None)
+
+        # Assert
+        self.assertIsInstance(words, list)
+        self.assertGreater(len(words), 0)
+
+    def test_tweet_from_csv(self):
+        # Arrange
+        # Don't actually tweet:
+        word_tools.TEST_MODE = True
+        search_term = "I love the word"
+        tweet_prefix = "Test: "
+        words = []
+
+        # Act
+        word_tools.tweet_those(
+            words, tweet_prefix, self.csv_file, search_term, "alltime")
+
+        # Assert
+        # No exceptions
 
     def test_add_string_to_wordnik(self):
         words = ['string']
