@@ -212,6 +212,37 @@ class TestFindWords(unittest.TestCase):
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
+    def test_add_nothing_to_wordnik(self):
+        # Arrange
+        words = []
+        wordlist_permalink = "test--47"
+        # Act
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+        # Assert
+        # No exceptions
+
+    def test_add_to_wordnik_test_mode(self):
+        # Arrange
+        words = ["one", "two"]
+        wordlist_permalink = "test--47"
+        # Enable test mode
+        word_tools.TEST_MODE = True
+        # Act
+        word_tools.add_to_wordnik(words, wordlist_permalink)
+        # Assert
+        # No exceptions
+
+    def test_pick_a_random_tweet(self):
+        # Arrange
+        search_term = "I love the word"
+        # Act
+        id = word_tools.pick_a_random_tweet(self.csv_file, search_term)
+        # Assert
+        self.assertIn(id, ['462097300840796160',
+                           '462096811738398720',
+                           '462851899889164288',
+                           '462854220165574656',
+                           '462851899889164288'])
 
 if __name__ == '__main__':
     unittest.main()
