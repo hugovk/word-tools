@@ -23,14 +23,18 @@ try:
 except NameError:
     pass
 
+# Log time
+print(time.ctime())
+
+
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
 
 TWEET_CHOICES = (
     'none',  # 'none' must be first
     'latest', 'latest_onetweet', '24hours', '7days', '30days', 'thisyear',
-    'alltime', 'retweet',
-    'random')  # 'random' must be last
+    'alltime',
+    'retweet', 'random')  # 'retweet' and 'random' must be last
 
 DAY_IN_SECONDS = 24 * 60 * 60
 
@@ -214,8 +218,16 @@ def extract_words(search_term, target_word_follows_search_term, results):
     pattern = get_pattern(search_term, target_word_follows_search_term)
 
     for status in results['statuses']:
+        # Ignore a Twitter bot
+        print(status['user']['screen_name'])
+        print(status['user']['screen_name'] == "unrepedant")
+        print(type(status['user']['screen_name']), type("unrepedant"))
+        if status['user']['screen_name'] == "unrepedant":
+            continue
+
         text = status['text']
         print("----")
+
         word = word_from_text(text, pattern, search_term)
         if word is not None:
             # print_it(status['user']['screen_name'])
@@ -268,6 +280,8 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
             id_str_colnum = find_colnum("id_str", row)
 
         else:  # not header
+            if not row:
+                continue
             # Avoid duplicates
             if row[id_str_colnum] in seen:
                 continue
@@ -383,7 +397,7 @@ def add_to_wordnik(words, wordlist_permalink):
     wordListApi.addWordsToWordList(
         wordlist_permalink, WORDNIK_TOKEN, body=words_to_add)
 
-    print(str(len(words)) + " words added")
+    print(number + " added")
 
 
 # ================ TWITTER ==================
@@ -474,7 +488,7 @@ def tweet_those(
     extra_prefix = ""
 
     if mode == "retweet":
-        id = pick_a_random_tweet(csv_file, search_term, 7 * DAY_IN_SECONDS)
+        id = pick_a_random_tweet(csv_file, search_term, 2 * DAY_IN_SECONDS)
         retweet(id)
         return
     elif mode == "none":
