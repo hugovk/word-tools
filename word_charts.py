@@ -40,8 +40,17 @@ def print_chart(top):
     """
     param top: a list of (word, count) tuples.
     """
+    if args.html:
+        print("<ol>")
+
     for i, (word, count) in enumerate(top):
-        print(str(i+1) + ". " + word + " (" + commafy(count) + ")")
+        if args.html:
+            print("<li>{0} ({1})</li>".format(word, commafy(count)))
+        else:
+            print(str(i+1) + ". " + word + " (" + commafy(count) + ")")
+
+    if args.html:
+        print("</ol>")
 
 
 def print_top(tweets, number=10, year=None, search_term=None):
@@ -104,6 +113,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--diff', action='store_true',
         help="Compare a year to the previous year")
+    parser.add_argument(
+        '--html', action='store_true',
+        help="Output with html markup")
     args = parser.parse_args()
 
     tweets = load_csv(args.csv)
