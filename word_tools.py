@@ -17,6 +17,9 @@ import random
 import re
 import time
 
+from wordnik import swagger, AccountApi, WordListApi
+from twitter import Twitter, OAuth  # pip install twitter
+
 # For Python 2.x
 try:
     input = raw_input
@@ -333,8 +336,6 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
 
 # ================= WORDNIK ==================
 
-from wordnik import swagger, AccountApi, WordListApi
-
 # Wordnik: get API key at http://developer.wordnik.com/
 WORDNIK_API_KEY = "3fd3445662c1ac873962d06094f057f39d4711730e1adc28f"
 WORDNIK_USERNAME = "hugovk"
@@ -401,9 +402,6 @@ def add_to_wordnik(words, wordlist_permalink):
 
 
 # ================ TWITTER ==================
-
-# https://github.com/sixohsix/twitter
-from twitter import Twitter, OAuth
 
 t = None
 
