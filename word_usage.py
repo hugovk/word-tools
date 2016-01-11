@@ -34,8 +34,13 @@ def print_per_month(tweets):
         counts[month_year] += 1
 
     # from pprint import pprint
+    xs, ys = [], []
     for month_year in counts:
         print(month_year, counts[month_year])
+        xs.append(month_year)
+        ys.append(counts[month_year])
+
+    return xs, ys
 
 
 if __name__ == "__main__":
@@ -43,7 +48,7 @@ if __name__ == "__main__":
         description="Show the number of mentions per month for a word.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        '-c', '--csv', default='M:/bin/data/favibot.csv',
+        '-c', '--csv', default='M:/bin/data/all.csv',
         help='Input CSV file')
     parser.add_argument(
         '-w', '--word',  default='bae',
@@ -54,6 +59,10 @@ if __name__ == "__main__":
     parser.add_argument(
         '-s', '--search_term',
         help="Only for this search term")
+    parser.add_argument(
+        '-p', '--plot', action='store_true',
+        help="Create a bar graph of results (requires Plotly authentication: "
+             "https://plot.ly/python/getting-started/")
     args = parser.parse_args()
 
     tweets = load_csv(args.csv)
@@ -70,6 +79,24 @@ if __name__ == "__main__":
     # Sort by ID = sort chronologically
     tweets = sorted(tweets, key=lambda k: k['id_str'])
 
-    print_per_month(tweets)
+    xs, ys = print_per_month(tweets)
+
+    if args.plot:
+        print("Plotting...")
+        import plotly.plotly as py  # pip install plotly + needs auth
+        import plotly.graph_objs as go
+        layout = go.Layout(
+            title=args.word
+        )
+        trace0 = go.Scatter(
+            x=xs,
+            y=ys,
+            mode='lines+markers',
+            name=args.word
+        )
+        data = [trace0]
+        fig = go.Figure(data=data, layout=layout)
+        plot_url = py.plot(fig, filename='word_usage_' + args.word)
+        print(plot_url)
 
 # End of file
