@@ -267,7 +267,7 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
         cutoff = epoch_time - seconds_delta
 
     word_colnum, searchterm_colnum, created_at_colnum = None, None, None
-    matched_words, eligable_ids = [], []
+    matched_words, eligible_ids = [], []
     seen = set()  # avoid duplicates
     ifile = open(csv_file, "r")
     reader = csv.reader(ifile)
@@ -303,28 +303,28 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
             timestamp = time.mktime(time.strptime(
                 row[created_at_colnum], '%a %b %d %H:%M:%S +0000 %Y'))
             if timestamp > cutoff:
-                eligable_ids.append(row[id_str_colnum])
+                eligible_ids.append(row[id_str_colnum])
                 matched_words.append(row[word_colnum].decode('utf-8'))
 
     ifile.close()
 
-    return eligable_ids, matched_words
+    return eligible_ids, matched_words
 
 
 def pick_a_random_tweet(csv_file, search_term, seconds_delta=None):
     """Load the CSV and return a random ID from the given time period"""
 
-    eligable_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
+    eligible_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
                                                          seconds_delta)
 
     # Return a random ID
-    return random.choice(eligable_ids)
+    return random.choice(eligible_ids)
 
 
 def load_words_from_csv(csv_file, search_term, seconds_delta=None):
     """Load the CSV and return the top words for a given time period"""
 
-    eligable_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
+    eligible_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
                                                          seconds_delta)
 
     import most_frequent_words
