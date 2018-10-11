@@ -2,9 +2,10 @@ word-tools
 ==========
 
 [![Build Status](https://travis-ci.org/hugovk/word-tools.svg?branch=master)](https://travis-ci.org/hugovk/word-tools)
-[![Coverage Status](https://coveralls.io/repos/hugovk/word-tools/badge.png?branch=master)](https://coveralls.io/r/hugovk/word-tools?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/hugovk/word-tools/badge.svg?branch=master)](https://coveralls.io/github/hugovk/word-tools?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hugovk/word-tools/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hugovk/word-tools/?branch=master)
 [![Code Health](https://landscape.io/github/hugovk/word-tools/master/landscape.png)](https://landscape.io/github/hugovk/word-tools/master)
+[![Python: 2.7, 3.4+](https://img.shields.io/badge/python-2.7,_3.4+-blue.svg)](https://www.python.org/downloads/)
 
 Tools to do things with words
 
