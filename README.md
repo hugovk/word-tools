@@ -6,6 +6,7 @@ word-tools
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hugovk/word-tools/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hugovk/word-tools/?branch=master)
 [![Code Health](https://landscape.io/github/hugovk/word-tools/master/landscape.png)](https://landscape.io/github/hugovk/word-tools/master)
 [![Python: 2.7, 3.4+](https://img.shields.io/badge/python-2.7,_3.4+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 Tools to do things with words
 

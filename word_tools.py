@@ -6,6 +6,7 @@ Wordnik and Twitter utility functions
 # ================ GENERAL ==================
 
 import argparse
+
 try:
     import ConfigParser as configparser
 except ImportError:
@@ -34,10 +35,17 @@ print(time.ctime())
 TEST_MODE = False
 
 TWEET_CHOICES = (
-    'none',  # 'none' must be first
-    'latest', 'latest_onetweet', '24hours', '7days', '30days', 'thisyear',
-    'alltime',
-    'retweet', 'random')  # 'retweet' and 'random' must be last
+    "none",  # 'none' must be first
+    "latest",
+    "latest_onetweet",
+    "24hours",
+    "7days",
+    "30days",
+    "thisyear",
+    "alltime",
+    "retweet",
+    "random",
+)  # 'retweet' and 'random' must be last
 
 DAY_IN_SECONDS = 24 * 60 * 60
 
@@ -52,17 +60,22 @@ def dedupe(seq):
 
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
-    print(text.encode('utf-8'))
+    print(text.encode("utf-8"))
 
 
 def do_argparse(description=None):
     parser = argparse.ArgumentParser(
-        description=description,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        description=description, formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
     parser.add_argument(
-        '-t', '--tweet', default='latest', choices=TWEET_CHOICES,
-        help="How to tweet the results.")
+        "-t",
+        "--tweet",
+        default="latest",
+        choices=TWEET_CHOICES,
+        help="How to tweet the results.",
+    )
     return parser
+
 
 # The `stuff` list looks like:
 #     [
@@ -96,7 +109,7 @@ def save_ini(ini_file, stuff):
 
     if TEST_MODE:
         return
-    with open(ini_file, 'wb') as configfile:
+    with open(ini_file, "wb") as configfile:
         config.write(configfile)
 
 
@@ -104,20 +117,33 @@ def update_csv(csv_file, search_term, words, statuses):
     file_exists = os.path.exists(csv_file)
     if TEST_MODE:
         return
-    fd = open(csv_file, 'ab')
+    fd = open(csv_file, "ab")
     try:
         writer = csv.writer(fd)
         if not file_exists:  # add header
-            writer.writerow((
-                'word', 'search_term', 'created_at', 'id_str',
-                'screen_name', 'user_name', 'text'))
+            writer.writerow(
+                (
+                    "word",
+                    "search_term",
+                    "created_at",
+                    "id_str",
+                    "screen_name",
+                    "user_name",
+                    "text",
+                )
+            )
         for i, status in enumerate(statuses):
             csv_data = [
-                words[i], search_term, status['created_at'], status['id_str'],
-                status['user']['screen_name'], status['user']['name'],
-                status['text'].replace('\n', ' ')]
+                words[i],
+                search_term,
+                status["created_at"],
+                status["id_str"],
+                status["user"]["screen_name"],
+                status["user"]["name"],
+                status["text"].replace("\n", " "),
+            ]
             for i, field in enumerate(csv_data):
-                csv_data[i] = field.encode('utf8')
+                csv_data[i] = field.encode("utf8")
             writer.writerow(csv_data)
 
     finally:
@@ -135,7 +161,7 @@ def get_pattern(search_term, target_word_follows_search_term):
         # [whitespace, period, exclamation mark, comma,
         # brackets, question mark]
         # pattern = re.compile(
-            # search_term + "\s+([^\s.!,()?]+)", re.IGNORECASE)
+        # search_term + "\s+([^\s.!,()?]+)", re.IGNORECASE)
 
         # \s = whitespace
         # \w = word characters (a-zA-Z0-9_) but re.UNICODE allows umlauts
@@ -144,8 +170,8 @@ def get_pattern(search_term, target_word_follows_search_term):
         # of apostrophes and hyphens as long as they are followed by a word
         # char. Then end the group with any number of non-word chars.
         pattern = re.compile(
-            search_term + r"\s+" + word_pattern,
-            re.IGNORECASE | re.UNICODE)
+            search_term + r"\s+" + word_pattern, re.IGNORECASE | re.UNICODE
+        )
     else:
         # Matches at least something that's NOT
         # [whitespace, period, exclamation mark, comma,
@@ -154,8 +180,8 @@ def get_pattern(search_term, target_word_follows_search_term):
         # [whitespace, period, exclamation mark, comma]
         # and then "is my new etc."
         pattern = re.compile(
-            word_pattern + r"\s+" + search_term,
-            re.IGNORECASE | re.UNICODE)
+            word_pattern + r"\s+" + search_term, re.IGNORECASE | re.UNICODE
+        )
 
     return pattern
 
@@ -165,11 +191,11 @@ def word_from_text(text, pattern, search_term):
     print_it(text)
 
     # Ignore retweets
-    if text.startswith('RT'):
+    if text.startswith("RT"):
         return None
 
     # Ignore retweets
-    if ' RT ' in text and text.find(' RT ') < text.find(search_term):
+    if " RT " in text and text.find(" RT ") < text.find(search_term):
         return None
 
     # Ignore tweets beginning with a curly left double quote,
@@ -191,8 +217,17 @@ def word_from_text(text, pattern, search_term):
 
         # Ignore some common words
         if word.lower() in [
-                "it", "this", "that", "which", "and",
-                "a", "of", "in", "but", "there"]:
+            "it",
+            "this",
+            "that",
+            "which",
+            "and",
+            "a",
+            "of",
+            "in",
+            "but",
+            "there",
+        ]:
             return None
 
         # Ignore if any unbalanced brackets
@@ -220,15 +255,15 @@ def extract_words(search_term, target_word_follows_search_term, results):
     statuses = []
     pattern = get_pattern(search_term, target_word_follows_search_term)
 
-    for status in results['statuses']:
+    for status in results["statuses"]:
         # Ignore a Twitter bot
-        print(status['user']['screen_name'])
-        print(status['user']['screen_name'] == "unrepedant")
-        print(type(status['user']['screen_name']), type("unrepedant"))
-        if status['user']['screen_name'] == "unrepedant":
+        print(status["user"]["screen_name"])
+        print(status["user"]["screen_name"] == "unrepedant")
+        print(type(status["user"]["screen_name"]), type("unrepedant"))
+        if status["user"]["screen_name"] == "unrepedant":
             continue
 
-        text = status['text']
+        text = status["text"]
         print("----")
 
         word = word_from_text(text, pattern, search_term)
@@ -240,10 +275,10 @@ def extract_words(search_term, target_word_follows_search_term, results):
     return words, statuses
 
 
-def find_words(
-        search_term, target_word_follows_search_term, results, csv_file):
+def find_words(search_term, target_word_follows_search_term, results, csv_file):
     words, statuses = extract_words(
-        search_term, target_word_follows_search_term, results)
+        search_term, target_word_follows_search_term, results
+    )
     update_csv(csv_file, search_term, words, statuses)
     return words
 
@@ -294,17 +329,17 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
             if row[searchterm_colnum] != search_term:
                 continue
             text = row[text_colnum]
-            if text[0] == "@" and \
-                    "I love the word douchebag. http://t.co/" in text:
+            if text[0] == "@" and "I love the word douchebag. http://t.co/" in text:
                 # print(row[text_colnum])
                 continue
 
             # seconds since epoch:
-            timestamp = time.mktime(time.strptime(
-                row[created_at_colnum], '%a %b %d %H:%M:%S +0000 %Y'))
+            timestamp = time.mktime(
+                time.strptime(row[created_at_colnum], "%a %b %d %H:%M:%S +0000 %Y")
+            )
             if timestamp > cutoff:
                 eligible_ids.append(row[id_str_colnum])
-                matched_words.append(row[word_colnum].decode('utf-8'))
+                matched_words.append(row[word_colnum].decode("utf-8"))
 
     ifile.close()
 
@@ -314,8 +349,9 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
 def pick_a_random_tweet(csv_file, search_term, seconds_delta=None):
     """Load the CSV and return a random ID from the given time period"""
 
-    eligible_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
-                                                         seconds_delta)
+    eligible_ids, matched_words = words_and_ids_from_csv(
+        csv_file, search_term, seconds_delta
+    )
 
     # Return a random ID
     return random.choice(eligible_ids)
@@ -324,14 +360,16 @@ def pick_a_random_tweet(csv_file, search_term, seconds_delta=None):
 def load_words_from_csv(csv_file, search_term, seconds_delta=None):
     """Load the CSV and return the top words for a given time period"""
 
-    eligible_ids, matched_words = words_and_ids_from_csv(csv_file, search_term,
-                                                         seconds_delta)
+    eligible_ids, matched_words = words_and_ids_from_csv(
+        csv_file, search_term, seconds_delta
+    )
 
     import most_frequent_words
+
     # Max tweet length is 280
     # Let's naively set an upper limit of 280/3:
     # one-character word, comma and space
-    top_words = most_frequent_words.most_frequent_words(matched_words, 280/3)
+    top_words = most_frequent_words.most_frequent_words(matched_words, 280 / 3)
     return top_words
 
 
@@ -343,14 +381,14 @@ WORDNIK_USERNAME = "hugovk"
 WORDNIK_PASSWORD = "mytopsecretwordnikpassword"
 WORDNIK_TOKEN = None
 
-wordnik_client = swagger.ApiClient(
-    WORDNIK_API_KEY, 'http://api.wordnik.com/v4')
+wordnik_client = swagger.ApiClient(WORDNIK_API_KEY, "http://api.wordnik.com/v4")
 wordListApi = WordListApi.WordListApi(wordnik_client)
 
 
 # TODO: Save token to ini file
 def get_wordnik_token():
     import getpass
+
     if WORDNIK_USERNAME:
         my_username = WORDNIK_USERNAME
     else:
@@ -380,7 +418,7 @@ def add_to_wordnik(words, wordlist_permalink):
         WORDNIK_TOKEN = get_wordnik_token()
 
     words.sort()
-    print_it("Words: " + ', '.join(words))
+    print_it("Words: " + ", ".join(words))
     if len(words) == 1:
         number = "1 word"
     else:
@@ -388,6 +426,7 @@ def add_to_wordnik(words, wordlist_permalink):
     print("Adding " + number + " to Wordnik list:" + wordlist_permalink)
 
     from wordnik.models import StringValue
+
     words_to_add = []
     for word in words:
         word_to_add = StringValue.StringValue()
@@ -396,8 +435,7 @@ def add_to_wordnik(words, wordlist_permalink):
 
     print_it(wordlist_permalink + " " + WORDNIK_TOKEN + " " + " ".join(words))
 
-    wordListApi.addWordsToWordList(
-        wordlist_permalink, WORDNIK_TOKEN, body=words_to_add)
+    wordListApi.addWordsToWordList(wordlist_permalink, WORDNIK_TOKEN, body=words_to_add)
 
     print(number + " added")
 
@@ -409,18 +447,18 @@ t = None
 
 def init_twitter(oauth_token, oauth_secret, consumer_key, consumer_secret):
     global t
-    t = Twitter(auth=OAuth(oauth_token, oauth_secret,
-                           consumer_key, consumer_secret))
+    t = Twitter(auth=OAuth(oauth_token, oauth_secret, consumer_key, consumer_secret))
 
 
 def get_words_from_twitter(search_term, since_id=0):
     results = t.search.tweets(
-        q='"' + search_term + '"', count=100, since_id=int(since_id))
+        q='"' + search_term + '"', count=100, since_id=int(since_id)
+    )
 
-    print(results['search_metadata'])
-    print("Requested:\t" + str(results['search_metadata']['count']))
-    print("Found:\t" + str(len(results['statuses'])))
-    max_id = results['search_metadata']['max_id']
+    print(results["search_metadata"])
+    print("Requested:\t" + str(results["search_metadata"]["count"]))
+    print("Found:\t" + str(len(results["statuses"])))
+    max_id = results["search_metadata"]["max_id"]
     print("Max ID:\t" + str(max_id))
 
     return max_id, results
@@ -478,8 +516,7 @@ def update_tweet_with_words(tweet, words):
     return tweet, words_remaining
 
 
-def tweet_those(
-        words, tweet_prefix, csv_file=None, search_term=None, mode="latest"):
+def tweet_those(words, tweet_prefix, csv_file=None, search_term=None, mode="latest"):
     # Remove duplicates
     words = dedupe(words)
 
@@ -537,5 +574,6 @@ def tweet_those(
 
     if tweet_all_words and len(words_remaining) > 0:
         tweet_those(words_remaining, tweet_prefix)
+
 
 # End of file

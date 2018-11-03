@@ -46,26 +46,26 @@ def print_per_month(tweets):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Show the number of mentions per month for a word.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     parser.add_argument(
-        '-c', '--csv', default='M:/bin/data/all.csv',
-        help='Input CSV file')
+        "-c", "--csv", default="M:/bin/data/all.csv", help="Input CSV file"
+    )
+    parser.add_argument("-w", "--word", default="bae", help="Word to search for")
     parser.add_argument(
-        '-w', '--word',  default='bae',
-        help='Word to search for')
+        "-y", "--year", type=int, default=None, help="Only from this year"
+    )
     parser.add_argument(
-        '-y', '--year',  type=int, default=None,
-        help="Only from this year")
+        "-ny", "--not_year", type=int, default=None, help="Not from this year"
+    )
+    parser.add_argument("-s", "--search_term", help="Only for this search term")
     parser.add_argument(
-        '-ny', '--not_year',  type=int, default=None,
-        help="Not from this year")
-    parser.add_argument(
-        '-s', '--search_term',
-        help="Only for this search term")
-    parser.add_argument(
-        '-p', '--plot', action='store_true',
+        "-p",
+        "--plot",
+        action="store_true",
         help="Create a bar graph of results (requires Plotly authentication: "
-             "https://plot.ly/python/getting-started/")
+        "https://plot.ly/python/getting-started/",
+    )
     args = parser.parse_args()
 
     tweets = load_csv(args.csv)
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         tweets = filter_year(tweets, args.not_year, invert_filter=True)
 
     # Sort by ID = sort chronologically
-    tweets = sorted(tweets, key=lambda k: k['id_str'])
+    tweets = sorted(tweets, key=lambda k: k["id_str"])
 
     xs, ys = print_per_month(tweets)
 
@@ -91,18 +91,12 @@ if __name__ == "__main__":
         print("Plotting...")
         import plotly.plotly as py  # pip install plotly + needs auth
         import plotly.graph_objs as go
-        layout = go.Layout(
-            title=args.word
-        )
-        trace0 = go.Scatter(
-            x=xs,
-            y=ys,
-            mode='lines+markers',
-            name=args.word
-        )
+
+        layout = go.Layout(title=args.word)
+        trace0 = go.Scatter(x=xs, y=ys, mode="lines+markers", name=args.word)
         data = [trace0]
         fig = go.Figure(data=data, layout=layout)
-        plot_url = py.plot(fig, filename='word_usage_' + args.word)
+        plot_url = py.plot(fig, filename="word_usage_" + args.word)
         print(plot_url)
 
 # End of file
