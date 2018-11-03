@@ -4,6 +4,7 @@ Find examples of "X is my new favourite/favorite/fave" on Twitter and
 add them to Wordnik word lists.
 """
 import word_tools
+from favibot_secrets import CONSUMER_KEY, CONSUMER_SECRET, OAUTH_SECRET, OAUTH_TOKEN
 
 # Optional, http://stackoverflow.com/a/1557906/724176
 try:
@@ -12,12 +13,6 @@ try:
     assert timing  # silence warnings
 except ImportError:
     pass
-
-# Twitter: create an app at https://dev.twitter.com/apps/new
-CONSUMER_KEY = "TODO_ENTER_YOURS_HERE"
-CONSUMER_SECRET = "TODO_ENTER_YOURS_HERE"
-OAUTH_TOKEN = "TODO_ENTER_YOURS_HERE"
-OAUTH_SECRET = "TODO_ENTER_YOURS_HERE"
 
 favourite_max_id, favorite_max_id, fave_max_id = 0, 0, 0
 STUFF = [
