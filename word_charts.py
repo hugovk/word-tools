@@ -49,7 +49,7 @@ def print_chart(top):
 
     for i, (word, count) in enumerate(top):
         if args.html:
-            print("<li>{0} ({1})</li>".format(word, commafy(count)))
+            print("<li>{} ({})</li>".format(word, commafy(count)))
         else:
             print(str(i+1) + ". " + word + " (" + commafy(count) + ")")
 
