@@ -31,9 +31,6 @@ STUFF = [
 # e.g. "I love the word X" (True) or "X is my favourite new word" (False)?
 TARGET_WORD_FOLLOWS_SEARCH_TERM = False
 
-# Test mode doesn't actually save csv, ini or update Wordnik or Twitter
-TEST_MODE = False
-
 if __name__ == "__main__":
     # args = word_tools.do_argparse()
     parser = word_tools.do_argparse(
@@ -52,6 +49,12 @@ if __name__ == "__main__":
         default="/Users/hugo/Dropbox/bin/data/favibot.csv",
         help="CSV file location for storing matching tweets",
     )
+    parser.add_argument(
+        "-n",
+        "--dry-run",
+        action="store_true",
+        help="Don't save CSV, INI or update Wordnik",
+    )
     args = parser.parse_args()
 
     word_tools.init_twitter(OAUTH_TOKEN, OAUTH_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
@@ -65,7 +68,7 @@ if __name__ == "__main__":
             search_term, TARGET_WORD_FOLLOWS_SEARCH_TERM, results, args.csv
         )
 
-        if not TEST_MODE:
+        if not args.dry_run:
             word_tools.add_to_wordnik(words, STUFF[2][i])
 
         tweet_prefix = STUFF[0][i].replace("is my ", "Twitter's ")
