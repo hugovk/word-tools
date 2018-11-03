@@ -127,7 +127,7 @@ def update_csv(csv_file, search_term, words, statuses):
 def get_pattern(search_term, target_word_follows_search_term):
     # word boundary, one or more word chars, any '-*,
     # one or more word chars, word boundary
-    word_pattern = "[^\w]*(\w+(['-\*]*\w)*)[^\w]*"
+    word_pattern = r"[^\w]*(\w+(['-\*]*\w)*)[^\w]*"
 
     if target_word_follows_search_term:
         # Matches search term ("I love the word")
@@ -144,7 +144,7 @@ def get_pattern(search_term, target_word_follows_search_term):
         # of apostrophes and hyphens as long as they are followed by a word
         # char. Then end the group with any number of non-word chars.
         pattern = re.compile(
-            search_term + "\s+" + word_pattern,
+            search_term + r"\s+" + word_pattern,
             re.IGNORECASE | re.UNICODE)
     else:
         # Matches at least something that's NOT
@@ -154,7 +154,7 @@ def get_pattern(search_term, target_word_follows_search_term):
         # [whitespace, period, exclamation mark, comma]
         # and then "is my new etc."
         pattern = re.compile(
-            word_pattern + "\s+" + search_term,
+            word_pattern + r"\s+" + search_term,
             re.IGNORECASE | re.UNICODE)
 
     return pattern
