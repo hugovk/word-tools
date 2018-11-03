@@ -6,20 +6,22 @@ Wordnik and Twitter utility functions
 # ================ GENERAL ==================
 
 import argparse
-
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
 import csv
 import datetime
 import os
 import random
 import re
+import sys
 import time
 
-from wordnik import swagger, AccountApi, WordListApi
-from twitter import Twitter, OAuth  # pip install twitter
+from twitter import OAuth, Twitter  # pip install twitter
+from wordnik import AccountApi, WordListApi, swagger
+
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
+
 
 # For Python 2.x
 try:
@@ -30,6 +32,7 @@ except NameError:
 # Log time
 print(time.ctime())
 
+PY2 = sys.version_info.major == 2
 
 # Test mode doesn't actually save csv, ini or update Wordnik or Twitter
 TEST_MODE = False
@@ -339,7 +342,10 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
             )
             if timestamp > cutoff:
                 eligible_ids.append(row[id_str_colnum])
-                matched_words.append(row[word_colnum].decode("utf-8"))
+                if PY2:
+                    matched_words.append(row[word_colnum].decode("utf-8"))
+                else:
+                    matched_words.append(row[word_colnum])
 
     ifile.close()
 
