@@ -187,12 +187,12 @@ class TestFindWords(unittest.TestCase):
         # Assert
         # No exceptions
 
-    def test_add_string_to_wordnik(self):
+    def OFF_test_add_string_to_wordnik(self):
         words = ['string']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
-    def test_add_strings_to_wordnik(self):
+    def OFF_test_add_strings_to_wordnik(self):
         words = ['string2', 'string3']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
@@ -207,7 +207,7 @@ class TestFindWords(unittest.TestCase):
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
-    def test_add_mix_to_wordnik(self):
+    def OFF_test_add_mix_to_wordnik(self):
         words = ['string4', u'unicode4']
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
