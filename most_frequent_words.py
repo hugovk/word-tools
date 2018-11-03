@@ -12,7 +12,7 @@ def commafy(value):
 
 def most_frequent_words_and_counts(word_list, number=None):
     counter = Counter(word_list)
-    most_common = counter.most_common(number)
+    most_common = counter.most_common(int(number))
     return most_common
 
 
