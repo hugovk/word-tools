@@ -14,7 +14,6 @@ try:
 except ImportError:
     pass
 
-
 love_max_id, hate_max_id = 0, 0
 STUFF = [
     ["I love the word", "I hate the word"],  # search term
@@ -49,6 +48,8 @@ if __name__ == "__main__":
         help="Don't save CSV, INI or update Wordnik",
     )
     args = parser.parse_args()
+
+    word_tools.TEST_MODE = args.dry_run
 
     word_tools.init_twitter(OAUTH_TOKEN, OAUTH_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
     STUFF = word_tools.load_ini(args.ini, STUFF)  # updates STUFF[1]

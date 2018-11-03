@@ -52,6 +52,8 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    word_tools.TEST_MODE = args.dry_run
+
     word_tools.init_twitter(OAUTH_TOKEN, OAUTH_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
     STUFF = word_tools.load_ini(args.ini, STUFF)  # updates STUFF[1]
 
