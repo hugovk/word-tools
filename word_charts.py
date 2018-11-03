@@ -17,12 +17,16 @@ import argparse
 import csv
 
 
-def filter_year(tweets, desired_year):
+def filter_year(tweets, desired_year, invert_filter=False):
     found = []
     for tweet in tweets:
         year = int(tweet["created_at"][-4:])
-        if desired_year == year:
-            found.append(tweet)
+        if invert_filter:
+            if desired_year != year:
+                found.append(tweet)
+        else:
+            if desired_year == year:
+                found.append(tweet)
     print("Total in " + str(desired_year) + ":\t" + commafy(len(found)))
     return found
 
@@ -112,7 +116,10 @@ if __name__ == "__main__":
         help="Only for this search term")
     parser.add_argument(
         '--diff', action='store_true',
-        help="Compare a year to the previous year")
+        help="Compare a year to a previous year")
+    parser.add_argument(
+        '-yd', '--yeardiff', type=int, default=1,
+        help="Number of years to compare against")
     parser.add_argument(
         '--html', action='store_true',
         help="Output with html markup")
@@ -122,9 +129,13 @@ if __name__ == "__main__":
     print("Total tweets:\t" + commafy(len(tweets)))
 
     if args.diff and args.year:
-        last_year = print_top(tweets, number=args.top_number, year=args.year-1,
+        last_year = print_top(tweets,
+                              number=args.top_number,
+                              year=args.year-args.yeardiff,
                               search_term=args.search_term)
-        this_year = print_top(tweets, number=args.top_number, year=args.year,
+        this_year = print_top(tweets,
+                              number=args.top_number,
+                              year=args.year,
                               search_term=args.search_term)
         last_years_words = [e[0] for e in last_year]
         this_years_words = [e[0] for e in this_year]
@@ -141,7 +152,7 @@ if __name__ == "__main__":
         print()
         top_x = " top " + str(args.top_number)
         print("# New entries in the " + str(args.year) + top_x +
-              " which weren't in the " + str(args.year-1) + top_x)
+              " which weren't in the " + str(args.year-args.yeardiff) + top_x)
         print()
         print_chart(top)
 

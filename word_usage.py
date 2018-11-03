@@ -57,6 +57,9 @@ if __name__ == "__main__":
         '-y', '--year',  type=int, default=None,
         help="Only from this year")
     parser.add_argument(
+        '-ny', '--not_year',  type=int, default=None,
+        help="Not from this year")
+    parser.add_argument(
         '-s', '--search_term',
         help="Only for this search term")
     parser.add_argument(
@@ -75,6 +78,9 @@ if __name__ == "__main__":
 
     if args.year:
         tweets = filter_year(tweets, args.year)
+
+    if args.not_year:
+        tweets = filter_year(tweets, args.not_year, invert_filter=True)
 
     # Sort by ID = sort chronologically
     tweets = sorted(tweets, key=lambda k: k['id_str'])
