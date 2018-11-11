@@ -53,3 +53,6 @@ coverage.xml
 docs/_build/
 
 src/
+favibot_secrets.py
+lovihatibot_secrets.py
+nixibot_secrets.py
