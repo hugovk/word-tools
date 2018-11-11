@@ -108,7 +108,7 @@ def save_ini(ini_file, stuff):
     config.add_section("max_ids")
     for i in range(len(stuff[1])):
         # Save max IDs using permalink as key
-        config.set("max_ids", stuff[2][i], stuff[1][i])
+        config.set("max_ids", stuff[2][i], str(stuff[1][i]))
 
     if TEST_MODE:
         return
