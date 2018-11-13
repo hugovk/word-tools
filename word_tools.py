@@ -17,6 +17,8 @@ import time
 from twitter import OAuth, Twitter  # pip install twitter
 from wordnik import AccountApi, WordListApi, swagger
 
+from wordnik_secrets import WORDNIK_API_KEY, WORDNIK_PASSWORD, WORDNIK_USERNAME
+
 try:
     import ConfigParser as configparser
 except ImportError:
@@ -381,12 +383,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
 
 # ================= WORDNIK ==================
 
-# Wordnik: get API key at http://developer.wordnik.com/
-WORDNIK_API_KEY = "3fd3445662c1ac873962d06094f057f39d4711730e1adc28f"
-WORDNIK_USERNAME = "hugovk"
-WORDNIK_PASSWORD = "mytopsecretwordnikpassword"
 WORDNIK_TOKEN = None
-
 wordnik_client = swagger.ApiClient(WORDNIK_API_KEY, "http://api.wordnik.com/v4")
 wordListApi = WordListApi.WordListApi(wordnik_client)
 

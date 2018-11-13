@@ -56,3 +56,4 @@ src/
 favibot_secrets.py
 lovihatibot_secrets.py
 nixibot_secrets.py
+wordnik_secrets.py
