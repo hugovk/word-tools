@@ -31,6 +31,7 @@ script:
   - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then black --check --diff .; fi
 
   # Unit tests
+  - cp example_wordnik_secrets.py wordnik_secrets.py
   - coverage run --source=word_tools.py test_word_tools.py
 
 after_success:
