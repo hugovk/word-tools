@@ -377,7 +377,7 @@ def load_words_from_csv(csv_file, search_term, seconds_delta=None):
     # Max tweet length is 280
     # Let's naively set an upper limit of 280/3:
     # one-character word, comma and space
-    top_words = most_frequent_words.most_frequent_words(matched_words, 280 / 3)
+    top_words = most_frequent_words.most_frequent_words(matched_words, MAX_LENGTH / 3)
     return top_words
 
 
@@ -445,6 +445,10 @@ def add_to_wordnik(words, wordlist_permalink):
 
 # ================ TWITTER ==================
 
+# Subtract a bit because sometimes it errors with
+# code 186: 'Tweet needs to be a bit shorter'
+# probably due to the Unicode prefix
+MAX_LENGTH = 280 - 5
 t = None
 
 
@@ -486,7 +490,7 @@ def retweet(id, trim_user=True):
 def tweet_string(string):
     if len(string) <= 0:
         return
-    if len(string) + 1 <= 280:  # Finish properly, if there's room
+    if len(string) + 1 <= MAX_LENGTH:  # Finish properly, if there's room
         string += "."
 
     print_it("TWEET THIS: " + string)
@@ -511,7 +515,7 @@ def update_tweet_with_words(tweet, words):
         else:
             # new_tweet = tweet + ", " + word
             new_tweet = tweet + " " + word
-        if len(new_tweet) > 280:
+        if len(new_tweet) > MAX_LENGTH:
             break
         else:
             tweet = new_tweet
