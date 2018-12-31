@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding=utf8
 """
 Get top word charts from a CSV file of logged tweets:
@@ -11,7 +11,6 @@ Get top for a search term:
     word_charts.py  -s favorite
     word_charts.py  -s favourite
 """
-from __future__ import print_function
 from most_frequent_words import most_frequent_words_and_counts, commafy
 import argparse
 import csv
@@ -87,7 +86,7 @@ def print_it(text):
 
 def load_csv(filename):
     # with codecs.open(filename, mode='rb', encoding='cp1252') as fd:
-    with open(filename, mode="rb") as fd:
+    with open(filename, mode="r") as fd:
         data = csv.DictReader(fd)
         rows = []
         seen = set()  # avoid duplicates
