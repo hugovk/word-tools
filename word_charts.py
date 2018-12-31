@@ -133,6 +133,7 @@ if __name__ == "__main__":
             year=args.year - args.yeardiff,
             search_term=args.search_term,
         )
+        print()
         this_year = print_top(
             tweets, number=args.top_number, year=args.year, search_term=args.search_term
         )
