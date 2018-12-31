@@ -74,6 +74,10 @@ def print_top(tweets, number=10, year=None, search_term=None):
         title += " (" + str(year) + ")"
     print(title)
     print()
+
+    # Filter out "ｆａｔｅ"
+    words = list(filter(("ｆａｔｅ").__ne__, words))
+
     top = most_frequent_words_and_counts(words, number)
     print_chart(top)
     return top
