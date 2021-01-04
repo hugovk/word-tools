@@ -1,4 +1,4 @@
-set PYTHON=C:\Python27\python.exe
+set PYTHON=C:\Python39\python.exe
 set DROPBOX_BIN=E:\Users\hugovk\Dropbox\bin
 set DROPBOX_DATA=E:\Users\hugovk\Dropbox\bin\data
 set TEE=%DROPBOX_BIN%\UnxUtils\tee
