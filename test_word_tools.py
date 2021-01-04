@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Unit tests for word_tools.py
 """
@@ -27,48 +26,48 @@ class TestFindWords(unittest.TestCase):
         )
 
     def test_word1(self):
-        text = u"I hate the word 'moist.'"
+        text = "I hate the word 'moist.'"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "moist")
 
     def test_word2(self):
-        text = u"I hate the word hun tf"
+        text = "I hate the word hun tf"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "hun")
 
     def test_word3(self):
-        text = u"“@BoobsNBamboos_: I hate the word hun tf” Sorry Hun."
+        text = "“@BoobsNBamboos_: I hate the word hun tf” Sorry Hun."
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, None)
 
     def test_word4(self):
-        text = u"!!!! RT @BoobsNBamboos_: I hate the word hun tf"
+        text = "!!!! RT @BoobsNBamboos_: I hate the word hun tf"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, None)
 
     def test_word5(self):
-        text = u'RT @MegannoConnor: I hate the word "swills"'
+        text = 'RT @MegannoConnor: I hate the word "swills"'
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, None)
 
     def test_word6(self):
-        text = u'I hate the word "Bae". It makes you sound uneducated.'
+        text = 'I hate the word "Bae". It makes you sound uneducated.'
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "bae")
 
     def test_word7(self):
-        text = u"Wow..I hate the word thot but that was funny."
+        text = "Wow..I hate the word thot but that was funny."
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "thot")
 
     def test_word8(self):
-        text = u"Why I hate the word 'couture'?! #weird"
+        text = "Why I hate the word 'couture'?! #weird"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "couture")
 
     def test_word9(self):
         text = (
-            u'I hate the word "spooky", bro the fuck you mean '
+            'I hate the word "spooky", bro the fuck you mean '
             '" dis nigga movin spooky" sounds like some shaggy '
             "n scooby doo type shit son"
         )
@@ -76,33 +75,33 @@ class TestFindWords(unittest.TestCase):
         self.assertEqual(word, "spooky")
 
     def test_word10(self):
-        text = u'I swear I hate the word “ flee " . . . .'
+        text = 'I swear I hate the word “ flee " . . . .'
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "flee")
 
     def test_word11(self):
-        text = u"I HATE the word bae...." "it seems like you just too lazy to say babe"
+        text = "I HATE the word bae...." "it seems like you just too lazy to say babe"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "bae")
 
     def test_word12(self):
-        text = u"I hate the word YALL like im a conjoined twin"
+        text = "I hate the word YALL like im a conjoined twin"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "yall")
 
     def test_word13(self):
-        text = u"I hate the word 'Banter' it annoys me so much🙈"
+        text = "I hate the word 'Banter' it annoys me so much🙈"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "banter")
 
     def test_word14(self):
-        text = u"I hate the word madting"
+        text = "I hate the word madting"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "madting")
 
     def test_word15(self):
         text = (
-            u"I hate the word ❌NO❌ like y'all nigga hate a bitch dat "
+            "I hate the word ❌NO❌ like y'all nigga hate a bitch dat "
             "uses her teeth on da dick."
         )
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
@@ -110,25 +109,25 @@ class TestFindWords(unittest.TestCase):
 
     def test_word16(self):
         text = (
-            u"@QuayNastyy Lmao So What Would Call Me ? " "Cause I HATE The Word Boo ."
+            "@QuayNastyy Lmao So What Would Call Me ? " "Cause I HATE The Word Boo ."
         )
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "boo")
 
     def test_word17(self):
-        text = u"i hate the word expand"
+        text = "i hate the word expand"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertEqual(word, "expand")
 
     def test_word18(self):
-        text = u"i hate the word glove(s)"
+        text = "i hate the word glove(s)"
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
         self.assertNotEqual(word, "glove(s")
 
     def test_word19(self):
         # Arrange
         self.setup_aint_a_word()
-        text = u'"People(s)" ain\'t a word😒'
+        text = '"People(s)" ain\'t a word😒'
 
         # Act
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
@@ -139,7 +138,7 @@ class TestFindWords(unittest.TestCase):
     def test_word20(self):
         # Arrange
         self.setup_aint_a_word()
-        text = u'"You(s)"\nAin\'t a word either 😒"'
+        text = '"You(s)"\nAin\'t a word either 😒"'
 
         # Act
         word = word_tools.word_from_text(text, self.pattern, self.search_term)
@@ -201,17 +200,17 @@ class TestFindWords(unittest.TestCase):
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
     def test_add_unicode_to_wordnik(self):
-        words = [u"unicode"]
+        words = ["unicode"]
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
     def test_add_unicodes_to_wordnik(self):
-        words = [u"unicode2", u"unicode3"]
+        words = ["unicode2", "unicode3"]
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 
     def OFF_test_add_mix_to_wordnik(self):
-        words = ["string4", u"unicode4"]
+        words = ["string4", "unicode4"]
         wordlist_permalink = "test--47"
         word_tools.add_to_wordnik(words, wordlist_permalink)
 

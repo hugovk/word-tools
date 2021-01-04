@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# encoding=utf8
 """
 Get top word charts from a CSV file of logged tweets:
     word_charts.py -n 100

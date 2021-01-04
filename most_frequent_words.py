@@ -7,7 +7,7 @@ from collections import Counter
 
 # Add thousands commas
 def commafy(value):
-    return "{:,}".format(value)
+    return f"{value:,}"
 
 
 def most_frequent_words_and_counts(word_list, number=None):

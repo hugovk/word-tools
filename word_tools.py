@@ -205,7 +205,7 @@ def word_from_text(text, pattern, search_term):
 
     # Ignore tweets beginning with a curly left double quote,
     # they're often quoting another person's tweet
-    if text[0] == u"\u201c":
+    if text[0] == "\u201c":
         return None
 
     # Ignore, probably quoting another's tweet
@@ -309,7 +309,7 @@ def words_and_ids_from_csv(csv_file, search_term, seconds_delta=None):
     word_colnum, searchterm_colnum, created_at_colnum = None, None, None
     matched_words, eligible_ids = [], []
     seen = set()  # avoid duplicates
-    ifile = open(csv_file, "r")
+    ifile = open(csv_file)
     reader = csv.reader(ifile)
 
     for rownum, row in enumerate(reader):

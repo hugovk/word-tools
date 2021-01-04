@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding=utf8
 """
 Show the number of mentions per month for a word:
     word_usage -w twizzle
@@ -7,7 +6,6 @@ Show the number of mentions per month for a word:
     word_usage -w twizzle -s favorite
     word_usage -w twizzle -s favourite
 """
-from __future__ import print_function
 from most_frequent_words import commafy
 import argparse
 from word_charts import load_csv, filter_year, filter_search_term

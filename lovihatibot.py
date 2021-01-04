@@ -67,9 +67,9 @@ if __name__ == "__main__":
 
         tweet_prefix = STUFF[0][i].replace("I ", "Tweeters ")
         if "love" in STUFF[0][i]:
-            tweet_prefix = u"\u2665 " + tweet_prefix  # heart
+            tweet_prefix = "\u2665 " + tweet_prefix  # heart
         else:
-            tweet_prefix = u"\u2020 " + tweet_prefix  # dagger
+            tweet_prefix = "\u2020 " + tweet_prefix  # dagger
 
         if args.tweet == "random":
             from random import choice
